@@ -3,7 +3,7 @@
     <img src="src/assets/icons/icon-128x128.png" height="100" alt="Blockcore" />
   </p>
   <h1 align="center">
-    Blockcore Notes
+    SpeXFeed
   </h1>
   <p align="center">
     Notes app for decentralized infrastructures (Nostr)
@@ -13,23 +13,23 @@
   </p>
 </p>
 
-Blockcore Notes is an app for your public and personal notes. It is built to support the Nostr.
+SpeXFeed is an app for your public and personal notes. It is built to support the Nostr.
 
 ![](/src/assets/blockcore-notes-screenshot.png)  
 
 ## Nostr
 
-The Nostr support for Blockcore Notes relies on using your Nostr identity (public key) and uses a set of relays to publish and store your notes. You can run your own personal relay to always keep a backup of your notes.
+The Nostr support for SpeXFeed relies on using your Nostr identity (public key) and uses a set of relays to publish and store your notes. You can run your own personal relay to always keep a backup of your notes.
 
 ## Connect using extension
 
-Blockcore Notes require that you use an extension that keeps your keys secure and is responsible for performing signing of your notes, and performs encryption and decryption for private notes.
+SpeXFeed require that you use an extension that keeps your keys secure and is responsible for performing signing of your notes, and performs encryption and decryption for private notes.
 
 We suggest using [Blockcore Wallet](https://github.com/block-core/blockcore-wallet) ([Chrome Web Store](https://chrome.google.com/webstore/detail/blockcore-wallet/peigonhbenoefaeplkpalmafieegnapj)), but other options are available such as [nos2x](https://github.com/fiatjaf/nos2x) and [Alby](https://github.com/getAlby/lightning-browser-extension).
 
 # Features
 
-A goal of Blockcore Notes is to be feature rich and have functionality that goes beyond the NIP-specifications.
+A goal of SpeXFeed is to be feature rich and have functionality that goes beyond the NIP-specifications.
 
 - Mobile and Desktop
 - Organize people and circles
