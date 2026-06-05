@@ -15,7 +15,7 @@
 
 Blockcore Notes is an app for your public and personal notes. It is built to support the Nostr.
 
-![](/src/assets/blockcore-notes-screenshot.png)
+![](/src/assets/blockcore-notes-screenshot.png)  
 
 ## Nostr
 
