@@ -36,6 +36,9 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+*.~*
+*test*
+.kilocode/
 
 # System files
 .DS_Store
