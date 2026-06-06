@@ -49,7 +49,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ env.VERSION }}
-          releaseName: "Blockcore Notes v${{ env.VERSION }}"
+          releaseName: "SpeXFeed v${{ env.VERSION }}"
           releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           prerelease: ${{ github.event.inputs.prerelease }}

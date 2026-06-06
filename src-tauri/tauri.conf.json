@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Blockcore Notes",
+  "productName": "SpeXFeed",
   "version": "2.0.0",
-  "identifier": "net.blockcore.notes",
+  "identifier": "org.spacexpanse.spexfeed",
   "build": {
     "beforeDevCommand": "npm run start",
     "devUrl": "http://localhost:4200",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Blockcore Notes",
+        "title": "SpeXFeed",
         "width": 800,
         "height": 600
       }

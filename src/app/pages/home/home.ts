@@ -59,7 +59,7 @@ export class HomeComponent {
   lists = [
     { name: 'Nostr', about: 'Influencial nostr developers and community people', pubkey: 'npub15xrwvftyzynahpl5fmpuv9wtkg9q52j8q73saw59u8tmx63ktx8sfclgss', pubkeyhex: 'a186e625641127db87f44ec3c615cbb20a0a2a4707a30eba85e1d7b36a36598f' },
     { name: 'Bitcoin', about: 'Influencial Bitcoin people', pubkey: 'npub175ag9cus82a0zzpkheaglnudpvsc8q046z82cyz9gmauzlve6r2s4k9fpm', pubkeyhex: 'f53a82e3903abaf10836be7a8fcf8d0b218381f5d08eac104546fbc17d99d0d5' },
-    { name: 'Blockcore', about: 'Follow the Blockcore developers', pubkey: 'npub1zfy0r7x8s3xukajewkmmzxjj3wpfan7apj5y7szz7y740wtf6p5q3tdyy9', pubkeyhex: '1248f1f8c7844dcb765975b7b11a528b829ecfdd0ca84f4042f13d57b969d068' },
+    { name: 'SpaceXpanse', about: 'Follow the SpaceXpanse community builders', pubkey: 'npub1zfy0r7x8s3xukajewkmmzxjj3wpfan7apj5y7szz7y740wtf6p5q3tdyy9', pubkeyhex: '1248f1f8c7844dcb765975b7b11a528b829ecfdd0ca84f4042f13d57b969d068' },
   ];
 
   @ViewChild('picker') picker: unknown;
@@ -106,7 +106,7 @@ export class HomeComponent {
       pubkey: '17e2889fba01021d048a13fd0ba108ad31c38326295460c21e69c43fa8fbe515',
       name: 'sondreb',
       picture: 'https://sondreb.com/favicon.png',
-      about: 'Developer 🦸‍♂️ of Blockcore Notes and Blockcore Wallet',
+      about: 'Developer 🦸‍♂️ of SpeXFeed and a Nostr signer extension (e.g., nos2x, Alby)',
       checked: false,
     },
   ];
@@ -246,7 +246,7 @@ export class HomeComponent {
     // useReactiveContext // New construct in Angular 14 for subscription.
     // https://medium.com/generic-ui/the-new-way-of-subscribing-in-an-angular-component-f74ef79a8ffc
 
-    this.appState.updateTitle('Blockcore Notes');
+    this.appState.updateTitle('SpeXFeed');
     this.appState.showBackButton = false;
     this.appState.showLogo = true;
     this.appState.actions = [

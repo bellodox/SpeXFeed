@@ -18,6 +18,7 @@ import { ProfileService } from 'src/app/services/profile';
 import { AuthenticationService } from 'src/app/services/authentication';
 import { ThemeService } from 'src/app/services/theme';
 import { SecurityService } from 'src/app/services/security';
+import { migratedSetItem } from 'src/app/services/storage-migration';
 
 @Component({
   selector: 'app-create',
@@ -98,8 +99,8 @@ export class CreateProfileComponent {
       const decrypted = await this.security.decryptData(encrypted, this.password);
 
       if (this.privateKeyHex == decrypted) {
-        localStorage.setItem('blockcore:notes:nostr:prvkey', encrypted);
-        localStorage.setItem('blockcore:notes:nostr:pubkey', this.publicKeyHex);
+        migratedSetItem('blockcore:notes:nostr:prvkey', encrypted);
+        migratedSetItem('blockcore:notes:nostr:pubkey', this.publicKeyHex);
 
         this.profile.npub = this.publicKey;
         this.profile.pubkey = this.publicKeyHex;

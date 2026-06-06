@@ -14,6 +14,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthenticationService } from 'src/app/services/authentication';
 import { ThemeService } from 'src/app/services/theme';
 import { SecurityService } from 'src/app/services/security';
+import { migratedSetItem } from 'src/app/services/storage-migration';
 import { ApplicationState } from 'src/app/services/applicationstate';
 
 @Component({
@@ -74,8 +75,8 @@ export class LoginComponent {
       const decrypted = await this.security.decryptData(encrypted, this.password);
 
       if (this.privateKeyHex == decrypted) {
-        localStorage.setItem('blockcore:notes:nostr:prvkey', encrypted);
-        localStorage.setItem('blockcore:notes:nostr:pubkey', this.publicKeyHex);
+        migratedSetItem('blockcore:notes:nostr:prvkey', encrypted);
+        migratedSetItem('blockcore:notes:nostr:pubkey', this.publicKeyHex);
 
         this.router.navigateByUrl('/');
       } else {

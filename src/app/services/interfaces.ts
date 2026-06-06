@@ -220,6 +220,10 @@ export interface NostrProfile {
   about: string;
   picture: string | any;
   banner?: string | any;
+  spexfeed_name?: string;
+  spexfeedName?: string;
+  sf_name?: string;
+  spexfeed?: { name?: string };
 
   /** https://github.com/nostr-protocol/nips/blob/master/05.md */
   nip05: string;

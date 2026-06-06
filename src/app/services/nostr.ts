@@ -5,6 +5,7 @@ import { getEventHash, getPublicKey, finalizeEvent, validateEvent } from 'nostr-
 import { PasswordDialog, PasswordDialogData } from '../shared/password-dialog/password-dialog';
 import { NostrEventDocument, NostrNoteDocument, NostrProfile, NostrProfileDocument } from './interfaces';
 import { SecurityService } from './security';
+import { migratedGetItem } from './storage-migration';
 import { StorageService } from './storage';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 
@@ -24,7 +25,7 @@ export class NostrService {
   constructor(public dialog: MatDialog, private snackBar: MatSnackBar, private security: SecurityService) {}
 
   async sign(event: any) {
-    let prvkeyEncrypted = localStorage.getItem('blockcore:notes:nostr:prvkey');
+    let prvkeyEncrypted = migratedGetItem('blockcore:notes:nostr:prvkey');
 
     if (!prvkeyEncrypted) {
       const gt = globalThis as any;
@@ -80,7 +81,7 @@ export class NostrService {
   }
 
   async relays() {
-    let prvkey = localStorage.getItem('blockcore:notes:nostr:prvkey');
+    let prvkey = migratedGetItem('blockcore:notes:nostr:prvkey');
 
     if (!prvkey) {
       try {
@@ -96,7 +97,7 @@ export class NostrService {
   }
 
   async decrypt(pubkey: string, content: string) {
-    let prvkey = localStorage.getItem('blockcore:notes:nostr:prvkey');
+    let prvkey = migratedGetItem('blockcore:notes:nostr:prvkey');
 
     if (!prvkey) {
       const gt = globalThis as any;
@@ -108,7 +109,7 @@ export class NostrService {
   }
 
   async encrypt(pubkey: string, content: string) {
-    let prvkey = localStorage.getItem('blockcore:notes:nostr:prvkey');
+    let prvkey = migratedGetItem('blockcore:notes:nostr:prvkey');
 
     if (!prvkey) {
       const gt = globalThis as any;

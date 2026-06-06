@@ -10,6 +10,7 @@ import { ThemeService } from '../../services/theme';
 import { Utilities } from '../../services/utilities';
 import { ConsentDialog } from './consent-dialog/consent-dialog';
 import { SpacesService } from '../../services/spaces';
+import { migratedGetItem, migratedSetItem } from '../../services/storage-migration';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -50,7 +51,7 @@ export class ConnectComponent {
   ) {}
 
   persist() {
-    localStorage.setItem('blockcore:notes:nostr:consent', this.consent.toString());
+    migratedSetItem('blockcore:notes:nostr:consent', this.consent.toString());
   }
 
   giveConsent() {
@@ -113,7 +114,7 @@ export class ConnectComponent {
   }
 
   ngOnInit() {
-    this.consent = localStorage.getItem('blockcore:notes:nostr:consent') === 'true';
+    this.consent = migratedGetItem('blockcore:notes:nostr:consent') === 'true';
     this.checkForExtension();
   }
 

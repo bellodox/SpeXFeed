@@ -115,7 +115,7 @@
     "EnableSpotify": "Включить Spotify",
     "EnableTidal": "Включить Tidal",
     "OpenMediaPlayer": "Открыть медиаплеер",
-    "RegisterProtocolHandlerNote": "Нажмите кнопку, чтобы Blockcore Notes обрабатывал ссылки на веб-сайтах для npub, nevent и nprofile.",
+    "RegisterProtocolHandlerNote": "Нажмите кнопку, чтобы SpeXFeed обрабатывал ссылки на веб-сайтах для npub, nevent и nprofile.",
     "Data": "Данные",
     "ExportPrivateKey": "Экспортировать приватный ключ",
     "ExportPrivateKeyNote": "Храните этот приватный ключ в безопасности, если вы его потеряете или поделитесь им с веб-сайтами, он может быть украден и использован злоумышленниками.",
@@ -133,7 +133,7 @@
     "FollowingListsNote": "Списки пользователей по темам, которые вы можете добавить в свой список подписок.",
     "ViewProfiles": "Просмотреть профили",
     "Prototype": "Прототип",
-    "PrototypeTitle": "Blockcore Notes находится на стадии прототипа. Часто сбрасывайте базу данных.",
+    "PrototypeTitle": "SpeXFeed находится на стадии прототипа. Часто сбрасывайте базу данных.",
     "PrototypeSubtitle": "Пожалуйста, рассмотрите возможность пожертвования биткойнов через Geyser:",
     "WriteANote": "Написать заметку",
     "ViewFollowingNotes": "Просмотреть заметки подписок"

@@ -1,0 +1,77 @@
+<div class="full-page register-name-page">
+  <div class="page register-name-shell">
+    <mat-card class="register-name-card">
+      <mat-card-header>
+        <mat-card-title>Register SpeXFeed Name</mat-card-title>
+        <mat-card-subtitle>Reserve a public profile handle backed by a ROD name record.</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <section class="identity-copy" aria-label="SpeXFeed Name safety notes">
+          <p><strong>SpeXFeed Names are profile handles.</strong> They are not SpeXID, KYC, legal identity, proof-of-personhood, or a custody service.</p>
+          <p><strong>Privacy warning:</strong> registering creates a public link between the ROD name and this Nostr public key.</p>
+        </section>
+
+        <form class="register-name-form" (ngSubmit)="checkName()">
+          <mat-form-field class="input-full-width">
+            <mat-label>Handle</mat-label>
+            <input matInput name="handle" [(ngModel)]="handleInput" placeholder="alice" autocomplete="off" />
+            <mat-hint>Canonical ROD name: {{ normalizedRodName }}</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field class="input-full-width">
+            <mat-label>Nostr public key</mat-label>
+            <input matInput name="nostrPubkey" [(ngModel)]="nostrPubkey" (ngModelChange)="handlePublicKeyChange()" autocomplete="off" />
+            <mat-hint>Registration links the SpeXFeed Name record to this public key. Hex and npub are accepted.</mat-hint>
+          </mat-form-field>
+
+          <ul *ngIf="publicKeyErrors.length > 0" class="error-list">
+            <li *ngFor="let error of publicKeyErrors">{{ error }}</li>
+          </ul>
+
+          <div class="actions-row">
+            <button mat-flat-button color="primary" type="submit" [disabled]="isProcessing">
+              Check name
+            </button>
+            <a mat-button routerLink="/settings">Back to settings</a>
+          </div>
+        </form>
+
+        <div class="status-panel" [class.positive]="state.status === 'available' || state.status === 'verified'" [class.warning]="state.status === 'unavailable' || state.status === 'invalid'" [class.error]="state.status === 'failed'" role="status" aria-live="polite">
+          <mat-spinner *ngIf="isProcessing" diameter="22"></mat-spinner>
+          <mat-icon *ngIf="state.status === 'available'">check_circle</mat-icon>
+          <mat-icon *ngIf="state.status === 'verified'">verified</mat-icon>
+          <mat-icon *ngIf="state.status === 'unavailable' || state.status === 'invalid'">warning</mat-icon>
+          <mat-icon *ngIf="state.status === 'failed'">error</mat-icon>
+          <span>{{ state.message || 'Enter a handle to check availability.' }}</span>
+        </div>
+
+        <ul *ngIf="state.errors.length > 0" class="error-list">
+          <li *ngFor="let error of state.errors">{{ error }}</li>
+        </ul>
+
+        <section *ngIf="state.status === 'available'" class="confirmation-panel" aria-label="Registration confirmation">
+          <label class="check-row">
+            <input type="checkbox" [(ngModel)]="acceptedPublicLinkWarning" name="acceptedPublicLinkWarning" />
+            <span>I understand this creates a public link between {{ state.rodName }} and my Nostr public key.</span>
+          </label>
+          <label class="check-row">
+            <input type="checkbox" [(ngModel)]="acceptedNotSpexIdWarning" name="acceptedNotSpexIdWarning" />
+            <span>I understand SpeXFeed Names are handles only, not SpeXID, KYC, legal identity, or proof-of-personhood.</span>
+          </label>
+          <button mat-flat-button color="primary" type="button" [disabled]="!canSubmit" (click)="submitRegistration()">Submit backend-assisted registration</button>
+        </section>
+
+        <section *ngIf="state.status === 'pending'" class="pending-panel">
+          <h2>Pending confirmation</h2>
+          <p>Request {{ state.requestId }} was submitted to the supported ROD helper flow. SpeXFeed will show verified after confirmation.</p>
+        </section>
+
+        <section *ngIf="state.status === 'verified'" class="verified-panel">
+          <h2>Verified</h2>
+          <p>{{ state.rodName }} is confirmed for this Nostr public key.</p>
+        </section>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

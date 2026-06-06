@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "blockcore-notes": {
+    "spexfeed": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "blockcore-notes:build:production"
+              "buildTarget": "spexfeed:build:production"
             },
             "development": {
-              "buildTarget": "blockcore-notes:build:development"
+              "buildTarget": "spexfeed:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "blockcore-notes:build"
+            "buildTarget": "spexfeed:build"
           }
         },
         "test": {

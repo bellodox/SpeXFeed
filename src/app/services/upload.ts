@@ -24,7 +24,7 @@ class VoidCat {
         'V-Filename': filename,
         'V-Content-Type': file.type,
         'V-Full-Digest': bytesToHex(new Uint8Array(digest)),
-        'V-Description': 'Upload from https://notes.blockcore.net',
+        'V-Description': 'Upload from https://spexfeed.spacexpanse.org',
       },
       body: buffer,
     });

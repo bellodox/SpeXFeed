@@ -6,8 +6,8 @@ import { AboutComponent } from './about';
 import { LicensesComponent } from './licenses/licenses';
 import {} from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuardService } from '../services/auth-guard';
-import { LoadingResolverService } from '../services/loading-resolver';
+import { AuthGuardService } from '../../services/auth-guard';
+import { LoadingResolverService } from '../../services/loading-resolver';
 import { CommonModule } from '@angular/common';
 
 const routes: Routes = [

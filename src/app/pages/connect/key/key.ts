@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ThemeService } from 'src/app/services/theme';
 import { SecurityService } from 'src/app/services/security';
+import { migratedSetItem } from 'src/app/services/storage-migration';
 
 @Component({
   selector: 'app-key',
@@ -82,8 +83,8 @@ export class ConnectKeyComponent {
       const decrypted = await this.security.decryptData(encrypted, this.password);
 
       if (this.privateKeyHex == decrypted) {
-        localStorage.setItem('blockcore:notes:nostr:prvkey', encrypted);
-        localStorage.setItem('blockcore:notes:nostr:pubkey', this.publicKeyHex);
+        migratedSetItem('blockcore:notes:nostr:prvkey', encrypted);
+        migratedSetItem('blockcore:notes:nostr:pubkey', this.publicKeyHex);
 
         this.reset();
 

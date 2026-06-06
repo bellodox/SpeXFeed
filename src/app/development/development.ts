@@ -32,7 +32,7 @@ export class DevelopmentComponent {
   }
 
   async database() {
-    // this.storage = new Storage('blockcore-notes-' + this.appState.getPublicKey(), 1);
+    // this.storage = new Storage('spexfeed-' + this.appState.getPublicKey(), 1);
     // await this.storage.open();
     // // await this.storage.putCircle({ id: 1, name: 'Circle 1' });
     // const circle = await this.storage.getCircle(1);

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
+import { migratedGetItem, migratedRemoveItem, migratedSetItem } from './storage-migration';
 import { Utilities } from './utilities';
 
 export class UserInfo {
@@ -31,7 +32,7 @@ export class AuthenticationService {
     const publicKey = await gt.nostr.getPublicKey();
     const user = this.createUser(publicKey);
 
-    localStorage.setItem('blockcore:notes:nostr:pubkey', publicKey);
+    migratedSetItem('blockcore:notes:nostr:pubkey', publicKey);
 
     this.authInfo$.next(user);
     return user;
@@ -44,15 +45,15 @@ export class AuthenticationService {
 
     const publicKey = readOnlyKey || '354faab36ca511a7956f0bfc2b64e06fe5395cd7208d9b65d6665270298743d8';
     const user = this.createUser(publicKey);
-    localStorage.setItem('blockcore:notes:nostr:pubkey', publicKey);
+    migratedSetItem('blockcore:notes:nostr:pubkey', publicKey);
 
     this.authInfo$.next(user);
     return user;
   }
 
   logout() {
-    localStorage.removeItem('blockcore:notes:nostr:pubkey');
-    localStorage.removeItem('blockcore:notes:nostr:prvkey');
+    migratedRemoveItem('blockcore:notes:nostr:pubkey');
+    migratedRemoveItem('blockcore:notes:nostr:prvkey');
     this.authInfo$.next(AuthenticationService.UNKNOWN_USER);
     this.router.navigateByUrl('/connect');
   }
@@ -66,7 +67,7 @@ export class AuthenticationService {
   }
 
   async getAuthInfo() {
-    let publicKey = localStorage.getItem('blockcore:notes:nostr:pubkey');
+    let publicKey = migratedGetItem('blockcore:notes:nostr:pubkey');
 
     if (publicKey) {
       try {
@@ -74,7 +75,7 @@ export class AuthenticationService {
       } catch (err) {
         // If we cannot parse the public key, reset the storage.
         publicKey = '';
-        localStorage.setItem('blockcore:notes:nostr:pubkey', '');
+        migratedSetItem('blockcore:notes:nostr:pubkey', '');
         return AuthenticationService.UNKNOWN_USER;
       }
 

@@ -1,7 +1,7 @@
 [package]
-name = "blockcore-notes"
+name = "spexfeed"
 version = "2.0.0"
-description = "Blockcore Notes"
+description = "SpeXFeed"
 authors = ["you"]
 edition = "2021"
 

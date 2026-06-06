@@ -70,6 +70,8 @@ import { MediaPlayerComponent } from './shared/media-player/media-player';
 import { NgxLoadingButtonsModule } from 'ngx-loading-buttons';
 import { LoggerService } from './services/logger';
 import { MobileMenuComponent } from './shared/mobile-menu/mobile-menu';
+import { validateSpeXFeedHandle } from './services/spexfeed-name';
+import { normalizeSpeXFeedLookupName } from './services/spexfeed-name-lookup';
 
 @Component({
   selector: 'app-root',
@@ -176,8 +178,14 @@ export class AppComponent {
     const queryParam = globalThis.location.search;
 
     if (queryParam) {
-      const param = Object.fromEntries(new URLSearchParams(queryParam)) as any;
-      this.appState.params = param;
+      const queryParameters = new URLSearchParams(queryParam);
+      const param: Record<string, string> = {};
+
+      queryParameters.forEach((value, key) => {
+        param[key] = value;
+      });
+
+      this.appState.params = param as any;
 
       if (this.appState.params.nostr) {
         const protocolRequest = new NostrProtocolRequest();
@@ -225,7 +233,11 @@ export class AppComponent {
 
   searchInputChanged() {
     if (this.appState.searchText) {
-      this.searchService.search(this.appState.searchText);
+      const handledByNavigation = this.handleSpeXFeedNameSearch(this.appState.searchText);
+
+      if (!handledByNavigation) {
+        this.searchService.search(this.appState.searchText);
+      }
     }
   }
 
@@ -309,7 +321,7 @@ export class AppComponent {
 
     // await this.storage.open();
     // await this.storage.initialize();
-    await this.db.initialize('blockcore-' + this.appState.getPublicKey());
+    await this.db.initialize('spexfeed-' + this.appState.getPublicKey());
 
     await this.circleService.initialize();
 
@@ -388,6 +400,10 @@ export class AppComponent {
         return;
       }
 
+      if (this.handleSpeXFeedNameSearch(value)) {
+        return;
+      }
+
       await this.searchService.search(value);
     });
 
@@ -396,5 +412,30 @@ export class AppComponent {
     // await this.storage.putProfile('123', { about: 'Hi', name: 'Name', picture: '' });
     // const testdata = await this.storage.get('123', 'profile');
     // console.log(testdata);
+  }
+
+  private handleSpeXFeedNameSearch(value: string): boolean {
+    const trimmedValue = value.trim().toLowerCase();
+
+    if (!trimmedValue.startsWith('sf/')) {
+      return false;
+    }
+
+    const handle = trimmedValue.substring(3);
+
+    if (validateSpeXFeedHandle(handle).length > 0) {
+      return false;
+    }
+
+    const normalizedName = normalizeSpeXFeedLookupName(trimmedValue);
+
+    if (!normalizedName.valid || !normalizedName.handle) {
+      return false;
+    }
+
+    this.appState.searchText = '';
+    this.searchControl.setValue('', { emitEvent: false });
+    void this.router.navigate(['/n', normalizedName.handle]);
+    return true;
   }
 }

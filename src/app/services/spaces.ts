@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { migratedGetItem } from './storage-migration';
 
 @Injectable({ providedIn: 'root' })
 export class SpacesService {
@@ -9,7 +10,7 @@ export class SpacesService {
   spaces: any[] = [];
 
   load() {
-    let spaces = localStorage.getItem('blockcore:notes:nostr:spaces');
+    let spaces = migratedGetItem('blockcore:notes:nostr:spaces');
 
     if (spaces) {
       this.spaces = JSON.parse(spaces);

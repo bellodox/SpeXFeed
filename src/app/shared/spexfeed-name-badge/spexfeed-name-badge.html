@@ -1,0 +1,14 @@
+<span
+  *ngIf="visible"
+  class="spexfeed-name-badge"
+  [class.compact]="compact"
+  [class.verified]="status === 'verified'"
+  [class.warning]="status === 'mismatch'"
+  [class.muted]="status !== 'verified' && status !== 'mismatch'"
+  [attr.aria-label]="verification?.message"
+  role="status"
+>
+  <mat-icon aria-hidden="true">{{ icon }}</mat-icon>
+  <span class="badge-label">{{ label }}</span>
+  <span class="badge-state" *ngIf="!compact">{{ verification?.message }}</span>
+</span>

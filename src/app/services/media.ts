@@ -168,7 +168,7 @@ export class MediaService implements OnInitialized {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: file.title,
       artist: file.artist,
-      album: 'Blockcore Notes',
+      album: 'SpeXFeed',
       artwork: [{ src: file.artwork }],
     });
 

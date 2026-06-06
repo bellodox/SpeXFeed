@@ -50,7 +50,7 @@ export class MediaPlayerComponent {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: 'LifeLike',
       artist: 'AlexiAction',
-      album: 'Blockcore Notes',
+      album: 'SpeXFeed',
       artwork: [
         { src: 'https://cdn.pixabay.com/user/2022/04/24/14-49-29-962_250x250.jpg', sizes: '96x96', type: 'image/jpg' },
         { src: 'https://cdn.pixabay.com/user/2022/04/24/14-49-29-962_250x250.jpg', sizes: '128x128', type: 'image/jpg' },

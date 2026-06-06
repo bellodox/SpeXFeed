@@ -1,7 +1,7 @@
 <div class="connect-container">
   <div class="connect-menu">
     <img class="connect-logo" width="128" height="128" src="assets/icons/icon-256x256.webp" />
-    <div class="logo-text"><span class="hide-tiny">Blockcore&nbsp;</span>Notes</div>
+    <div class="logo-text">SpeXFeed</div>
     <div class="connect-spacer"></div>
     <button (click)="theme.darkMode = !theme.darkMode" mat-icon-button class="theme-toggle">
       <mat-icon aria-label="Menu" class="material-icons">{{ theme.darkMode ? "dark_mode" : "light_mode" }}</mat-icon>
@@ -14,8 +14,8 @@
     </div>
     <div class="connect-button" *ngIf="showInstallLink">
       <a class="start-button" (click)="connect()" mat-flat-button color="accent"
-        href="https://chrome.google.com/webstore/detail/blockcore-wallet/peigonhbenoefaeplkpalmafieegnapj"
-        target="_blank">Install <span class="hide-tiny">extension</span></a>
+        href="https://github.com/nostr-protocol/nips/blob/master/07.md"
+        target="_blank">Install <span class="hide-tiny">a NIP-07 signer</span></a>
     </div>
     }
     <div class="connect-button" *ngIf="extensionDiscovered">
@@ -82,18 +82,18 @@
     </mat-card> -->
 
     <mat-card class="card card-image">
-      <img loading="lazy" width="1079" height="776" src="/assets/blockcore-notes-screenshot.png" />
+      <img loading="lazy" width="1079" height="776" src="/assets/spexfeed-screenshot.png" />
     </mat-card>
 
     <div class="store-banner card">
       <div class="store-content">
         
         <div class="store-text">
-          <h3>Blockcore Notes for Desktop</h3>
+          <h3>SpeXFeed for Desktop</h3>
           <p>Install the native app for a better experience</p>
         </div>
         <a
-          href="https://github.com/block-core/blockcore-notes/releases"
+          href="https://github.com/SpaceXpanse/SpeXFeed/releases"
           target="_blank"
           class="store-button"
         >
@@ -147,7 +147,7 @@
         <h1>Follow your favorite creators</h1>
         <p>
           No matter if they are photographers, film makers, bloggers, journalists or anyone else who likes to share and
-          engage in communities and chats, Blockcore Notes have you covered with dynamic content layouts and
+          engage in communities and chats, SpeXFeed has you covered with dynamic content layouts and
           organization of
           people.
         </p>
@@ -202,13 +202,13 @@
           </p>
           <p>Content you publish are your responsibility and you cannot undo/delete after you publish. Don't publish or share a note (post) you wouldn't say to your neighbour.</p>
 
-          <p>Blockcore has no involvement in the type of content being produced and shown to you in this app.</p>
+          <p>SpaceXpanse has no involvement in the type of content being produced and shown to you in this app.</p>
 
-          <p>You accept that all usage of Blockcore Notes, Blockcore infrastructure and software must be the result of peaceful voluntary human interactions.</p>
+          <p>You accept that all usage of SpeXFeed, SpaceXpanse infrastructure and software must be the result of peaceful voluntary human interactions.</p>
 
           <p>If you're young and still living with your parents, consider asking them for permission before you continue.</p>
 
-          <p>To continue you must agree with our <a href="https://www.blockcore.net/policy" target="_blank">Privacy Policy and Terms & Conditions</a>.</p>
+          <p>To continue you must agree with our <a href="https://www.spacexpanse.org/policy" target="_blank">Privacy Policy and Terms & Conditions</a>.</p>
         </div>
         <mat-checkbox color="primary" (change)="persist()" [(ngModel)]="consent">I have read and agree to this notice</mat-checkbox>
       </mat-card-content>

@@ -35,6 +35,8 @@ import { BadgeComponent } from './pages/badge/badge';
 import { ExampleComponent } from './example/example';
 import { ArticlesComponent } from './pages/articles/articles.component';
 import { FilesComponent } from './pages/files/files.component';
+import { RegisterNameComponent } from './pages/register-name/register-name';
+import { UpdateNameComponent } from './pages/update-name/update-name';
 
 export const routes: Routes = [
   {
@@ -206,6 +208,15 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'n/:handle',
+    loadComponent: () => import('./pages/name-resolver/name-resolver').then((module) => module.NameResolverComponent),
+    canActivate: [AuthGuard],
+    resolve: {
+      data: LoadingResolverService,
+    },
+    data: { title: 'SpeXFeed Name Lookup', hide: true },
+  },
+  {
     path: 'b/:id',
     component: BadgeComponent,
     canActivate: [AuthGuard],
@@ -280,6 +291,22 @@ export const routes: Routes = [
   {
     path: 'settings',
     component: SettingsComponent,
+    canActivate: [AuthGuard],
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
+  {
+    path: 'register-name',
+    component: RegisterNameComponent,
+    canActivate: [AuthGuard],
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
+  {
+    path: 'settings/name',
+    component: UpdateNameComponent,
     canActivate: [AuthGuard],
     resolve: {
       data: LoadingResolverService,

@@ -1,0 +1,47 @@
+.spexfeed-name-badge {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.82rem;
+  gap: 0.35rem;
+  line-height: 1.2;
+  margin: 0.2rem 0;
+  max-width: 100%;
+  padding: 0.25rem 0.55rem;
+}
+
+.spexfeed-name-badge mat-icon {
+  font-size: 1rem;
+  height: 1rem;
+  width: 1rem;
+}
+
+.spexfeed-name-badge.verified {
+  background: rgba(34, 142, 82, 0.14);
+  color: #1d7d49;
+}
+
+.spexfeed-name-badge.warning {
+  background: rgba(210, 125, 0, 0.16);
+  color: #9a5d00;
+}
+
+.spexfeed-name-badge.muted {
+  background: rgba(120, 120, 120, 0.16);
+  color: inherit;
+}
+
+.badge-label,
+.badge-state {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge-state {
+  opacity: 0.75;
+}
+
+.compact .badge-label {
+  max-width: 14rem;
+}

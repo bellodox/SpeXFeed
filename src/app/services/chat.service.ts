@@ -145,7 +145,7 @@ export class ChatService {
       {
         id: 0,
         targetUserId: 0,
-        username: 'Blockcore Channel',
+        username: 'SpeXFeed Channel',
         cover: 'https://avatars.githubusercontent.com/u/53176002',
         lastMessage: 'The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.',
         lastMessageLength: 0,

@@ -1,6 +1,6 @@
 <p align="center">
   <p align="center">
-    <img src="src/assets/icons/icon-128x128.png" height="100" alt="Blockcore" />
+    <img src="src/assets/icons/icon-128x128.png" height="100" alt="SpeXFeed" />
   </p>
   <h1 align="center">
     SpeXFeed
@@ -9,13 +9,13 @@
     Notes app for decentralized infrastructures (Nostr)
   </p>
   <p align="center">
-      <a href="https://github.com/block-core/blockcore-notes/actions"><img src="https://github.com/block-core/blockcore-notes/workflows/Build%20and%20Publish%20Web%20Site/badge.svg" /></a>
+      <a href="https://github.com/SpaceXpanse/SpeXFeed/actions"><img src="https://github.com/SpaceXpanse/SpeXFeed/workflows/Build%20and%20Publish%20Web%20Site/badge.svg" /></a>
   </p>
 </p>
 
 SpeXFeed is an app for your public and personal notes. It is built to support the Nostr.
 
-![](/src/assets/blockcore-notes-screenshot.png)  
+![](/src/assets/spexfeed-screenshot.png)  
 
 ## Nostr
 
@@ -25,7 +25,7 @@ The Nostr support for SpeXFeed relies on using your Nostr identity (public key) 
 
 SpeXFeed require that you use an extension that keeps your keys secure and is responsible for performing signing of your notes, and performs encryption and decryption for private notes.
 
-We suggest using [Blockcore Wallet](https://github.com/block-core/blockcore-wallet) ([Chrome Web Store](https://chrome.google.com/webstore/detail/blockcore-wallet/peigonhbenoefaeplkpalmafieegnapj)), but other options are available such as [nos2x](https://github.com/fiatjaf/nos2x) and [Alby](https://github.com/getAlby/lightning-browser-extension).
+We suggest using any Nostr signer extension such as [nos2x](https://github.com/fiatjaf/nos2x) or [Alby](https://github.com/getAlby/lightning-browser-extension). SpeXFeed also integrates with SpaceXpanse ROD name registration flows for public profile handle management.
 
 # Features
 

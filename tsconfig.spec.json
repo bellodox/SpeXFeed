@@ -3,6 +3,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["jasmine"]
   },
   "files": [],

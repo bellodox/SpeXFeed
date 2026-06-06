@@ -118,7 +118,7 @@
     "EnableSpotify": "Enable Spotify",
     "EnableTidal": "Enable Tidal",
     "OpenMediaPlayer": "Open Media Player",
-    "RegisterProtocolHandlerNote": "Click the button to make Blockcore Notes handle links on websites for npub, nevent and nprofile.",
+    "RegisterProtocolHandlerNote": "Click the button to make SpeXFeed handle links on websites for npub, nevent and nprofile.",
     "Data": "Data",
     "ExportPrivateKey": "Export Private Key",
     "ExportPrivateKeyNote": "Keep this private key safe, if you loose it or share it with websites, it can be stolen and misused.",

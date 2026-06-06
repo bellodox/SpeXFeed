@@ -1,0 +1,91 @@
+<div class="full-page update-name-page">
+  <div class="page update-name-shell">
+    <mat-card class="update-name-card">
+      <mat-card-header>
+        <mat-card-title>Update SpeXFeed Name</mat-card-title>
+        <mat-card-subtitle>Edit the public sf.profile record through the supported ROD helper flow.</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <section class="identity-copy" aria-label="SpeXFeed Name update safety notes">
+          <p><strong>SpeXFeed Names are public profile handles.</strong> They are not SpeXID, KYC, legal identity, proof-of-personhood, or wallet custody.</p>
+          <p><strong>Privacy warning:</strong> updates publish profile metadata in the ROD name record.</p>
+        </section>
+
+        <form class="update-name-form" (ngSubmit)="loadRecord()">
+          <mat-form-field class="input-full-width">
+            <mat-label>Handle or ROD name</mat-label>
+            <input matInput name="handle" [(ngModel)]="handleInput" (ngModelChange)="refreshPreview()" placeholder="alice or sf/alice" autocomplete="off" />
+          </mat-form-field>
+
+          <div class="actions-row">
+            <button mat-flat-button color="primary" type="submit" [disabled]="state.status === 'checking' || state.status === 'submitting' || state.status === 'pending'">Load current record</button>
+            <a mat-button routerLink="/settings">Back to settings</a>
+          </div>
+        </form>
+
+        <form class="update-name-form" (ngSubmit)="submitUpdate()">
+          <mat-form-field class="input-full-width">
+            <mat-label>Display name</mat-label>
+            <input matInput name="displayName" [(ngModel)]="displayName" (ngModelChange)="refreshPreview()" autocomplete="name" />
+          </mat-form-field>
+
+          <mat-form-field class="input-full-width">
+            <mat-label>About / bio</mat-label>
+            <textarea matInput name="about" [(ngModel)]="about" (ngModelChange)="refreshPreview()" rows="3"></textarea>
+          </mat-form-field>
+
+          <mat-form-field class="input-full-width">
+            <mat-label>Avatar URL</mat-label>
+            <input matInput name="avatarUrl" [(ngModel)]="avatarUrl" (ngModelChange)="refreshPreview()" placeholder="https://example.com/avatar.png" autocomplete="url" />
+          </mat-form-field>
+
+          <mat-form-field class="input-full-width">
+            <mat-label>Preferred relay(s)</mat-label>
+            <textarea matInput name="relayText" [(ngModel)]="relayText" (ngModelChange)="refreshPreview()" rows="3" placeholder="wss://relay.example.com"></textarea>
+            <mat-hint>Use one relay per line, or comma-separated relay URLs.</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field class="input-full-width">
+            <mat-label>Linked Nostr public key</mat-label>
+            <input matInput name="nostrPubkey" [(ngModel)]="nostrPubkey" (ngModelChange)="refreshPreview()" autocomplete="off" />
+            <mat-hint>Changing this rotates the key that can verify this SpeXFeed Name.</mat-hint>
+          </mat-form-field>
+
+          <section *ngIf="preview.rotatesLinkedKey" class="rotation-warning" aria-label="Linked key rotation warning">
+            <p><strong>Linked key rotation warning:</strong> submitting this update moves verification from the current Nostr key to the new public key. Existing profile claims may stop verifying until metadata is updated.</p>
+            <label class="check-row">
+              <input type="checkbox" [(ngModel)]="acceptedRotationWarning" name="acceptedRotationWarning" />
+              <span>I understand this rotates the linked Nostr key for this public ROD record.</span>
+            </label>
+          </section>
+
+          <section class="preview-panel" aria-label="sf.profile JSON preview">
+            <h2>JSON preview</h2>
+            <p [class.error-text]="!preview.validation.valid">Size: {{ preview.validation.byteSize || 0 }} / 2048 bytes</p>
+            <pre>{{ preview.validation.json || preview.validation.errors.join('\n') }}</pre>
+          </section>
+
+          <ul *ngIf="preview.validation.errors.length > 0" class="error-list">
+            <li *ngFor="let error of preview.validation.errors">{{ error }}</li>
+          </ul>
+
+          <div class="actions-row">
+            <button mat-flat-button color="primary" type="submit" [disabled]="!canSubmit">Submit profile update</button>
+          </div>
+        </form>
+
+        <div class="status-panel" [class.positive]="state.status === 'verified'" [class.warning]="state.status === 'pending' || state.status === 'available'" [class.error]="state.status === 'failed' || state.status === 'invalid'" role="status" aria-live="polite">
+          <mat-spinner *ngIf="state.status === 'checking' || state.status === 'submitting' || state.status === 'pending'" diameter="22"></mat-spinner>
+          <mat-icon *ngIf="state.status === 'verified'">verified</mat-icon>
+          <mat-icon *ngIf="state.status === 'failed' || state.status === 'invalid'">error</mat-icon>
+          <span>{{ state.message || 'Load a SpeXFeed Name record, review the preview, then submit an update.' }}</span>
+        </div>
+
+        <ul *ngIf="state.errors.length > 0" class="error-list">
+          <li *ngFor="let error of state.errors">{{ error }}</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

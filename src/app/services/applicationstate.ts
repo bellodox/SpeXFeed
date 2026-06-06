@@ -50,7 +50,7 @@ export class ApplicationState {
     this.location.back();
   }
 
-  title = 'Blockcore Notes';
+  title = 'SpeXFeed';
 
   title$: Observable<string>;
 
@@ -58,7 +58,7 @@ export class ApplicationState {
 
   updateTitle(title: string) {
     this.title = title;
-    this.titleService.setTitle(title + ' - Blockcore Notes');
+    this.titleService.setTitle(title + ' - SpeXFeed');
     this.titleChanged.next(this.title);
   }
 

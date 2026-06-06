@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ApplicationState } from './applicationstate';
+import { migratedGetItem, migratedSetItem } from './storage-migration';
 import { UploadService } from './upload';
 
 export interface Options {
@@ -39,7 +40,7 @@ export class OptionsService {
   values: Options = { mediaService: UploadService.defaultService, language: 'en', dir: 'ltr', enableReactions: true, enableZapping: true, showLines: true, peopleDisplayType: 1, peopleDisplayView: 0, peopleDisplaySort: 'name-asc' };
 
   load() {
-    let options = localStorage.getItem('blockcore:notes:nostr:options');
+    let options = migratedGetItem('blockcore:notes:nostr:options');
     if (options) {
       this.values = JSON.parse(options);
     }
@@ -70,6 +71,6 @@ export class OptionsService {
   }
 
   save() {
-    localStorage.setItem('blockcore:notes:nostr:options', JSON.stringify(this.values));
+    migratedSetItem('blockcore:notes:nostr:options', JSON.stringify(this.values));
   }
 }

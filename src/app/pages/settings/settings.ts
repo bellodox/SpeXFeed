@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatAccordion } from '@angular/material/expansion';
-import { nip19, Relay } from 'nostr-tools';
+import { RouterLink } from '@angular/router';
+import { nip19 } from 'nostr-tools';
 import { ApplicationState } from '../../services/applicationstate';
 import { StorageService } from '../../services/storage';
-import { EventService } from '../../services/event';
-import { NostrRelay } from '../../services/interfaces';
+import { NostrProfileDocument, NostrRelay } from '../../services/interfaces';
 import { ProfileService } from '../../services/profile';
 import { RelayService } from '../../services/relay';
 import { ThemeService } from '../../services/theme';
@@ -29,6 +29,11 @@ import { CommonModule } from '@angular/common';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { Subscription } from 'rxjs';
+import { SpeXFeedNameBadgeComponent } from '../../shared/spexfeed-name-badge/spexfeed-name-badge';
+import { SpeXFeedNameLookupService } from '../../services/spexfeed-name-lookup';
+import { getSpeXFeedNameClaim, SpeXFeedNameVerificationResult, verifySpeXFeedNameClaim } from '../../services/spexfeed-name-verification';
+import { migratedGetItem } from '../../services/storage-migration';
 
 @Component({
   selector: 'app-settings',
@@ -36,7 +41,8 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./settings.css'],
   imports: [
     ClipboardModule,
-    MatTabsModule, MatIconModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatSelectModule, TranslateModule, CommonModule]
+    SpeXFeedNameBadgeComponent,
+    MatTabsModule, MatIconModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatSelectModule, TranslateModule, CommonModule, RouterLink]
 })
 export class SettingsComponent {
   @ViewChild(MatAccordion) accordion!: MatAccordion;
@@ -45,6 +51,10 @@ export class SettingsComponent {
   wipedNonFollow = false;
   wipedNotes = false;
   open = false;
+  currentPublicKey = '';
+  currentProfile?: NostrProfileDocument;
+  spexfeedNameVerification?: SpeXFeedNameVerificationResult;
+  subscriptions: Subscription[] = [];
 
   constructor(
     public uploadService: UploadService,
@@ -59,6 +69,7 @@ export class SettingsComponent {
     private snackBar: MatSnackBar,
     public dataService: DataService,
     private security: SecurityService,
+    private spexfeedNameLookup: SpeXFeedNameLookupService,
     public translate: TranslateService
   ) {}
 
@@ -142,6 +153,7 @@ export class SettingsComponent {
 
   ngOnInit() {
     this.appState.updateTitle('Settings');
+    this.currentPublicKey = this.appState.getPublicKey();
     this.appState.showBackButton = false;
     this.appState.actions = [
       {
@@ -153,7 +165,39 @@ export class SettingsComponent {
       },
     ];
 
-    this.hasPrivateKey = localStorage.getItem('blockcore:notes:nostr:prvkey') != null;
+    this.hasPrivateKey = migratedGetItem('blockcore:notes:nostr:prvkey') != null;
+
+    this.subscriptions.push(
+      this.profileService.profile$.subscribe(async (profile) => {
+        if (!profile) {
+          return;
+        }
+
+        this.currentProfile = profile;
+        this.verifySpeXFeedName(profile);
+      })
+    );
+  }
+
+  async verifySpeXFeedName(profile: NostrProfileDocument) {
+    const claimedName = getSpeXFeedNameClaim(profile);
+    this.spexfeedNameVerification = verifySpeXFeedNameClaim(profile.pubkey, claimedName);
+
+    if (!claimedName) {
+      return;
+    }
+
+    try {
+      const lookupResult = await this.spexfeedNameLookup.resolveProfile(claimedName);
+
+      if (this.currentProfile?.pubkey !== profile.pubkey) {
+        return;
+      }
+
+      this.spexfeedNameVerification = verifySpeXFeedNameClaim(profile.pubkey, claimedName, lookupResult);
+    } catch {
+      this.spexfeedNameVerification = verifySpeXFeedNameClaim(profile.pubkey, claimedName);
+    }
   }
 
   registerHandler(protocol: string, parameter: string) {
@@ -195,6 +239,9 @@ export class SettingsComponent {
 
   ngOnDestroy() {
     this.resetPrivateKey();
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   onLanguageChanged(event: any) {
@@ -225,7 +272,7 @@ export class SettingsComponent {
         return;
       }
 
-      let prvkeyEncrypted = localStorage.getItem('blockcore:notes:nostr:prvkey');
+      let prvkeyEncrypted = migratedGetItem('blockcore:notes:nostr:prvkey');
 
       const prvkey = await this.security.decryptData(prvkeyEncrypted!, result.password);
 

@@ -4,7 +4,7 @@ import { CircleService } from 'src/app/services/circle';
 import { ProfileService } from 'src/app/services/profile';
 import { Utilities } from 'src/app/services/utilities';
 import { Circle, NostrProfileDocument, ProfileStatus } from '../../services/interfaces';
-import { ProfileImageDialog, ProfileImageDialogData } from '../profile-image-dialog/profile-image-dialog';
+import { ProfileImageDialog } from '../profile-image-dialog/profile-image-dialog';
 import * as QRCode from 'qrcode';
 import { Subscription } from 'rxjs';
 import { UIService } from 'src/app/services/ui';
@@ -19,15 +19,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MtxTooltipModule } from '@ng-matero/extensions/tooltip';
 import { MatButtonModule } from '@angular/material/button';
+import { SpeXFeedNameLookupService } from '../../services/spexfeed-name-lookup';
+import { getSpeXFeedNameClaim, SpeXFeedNameVerificationResult, verifySpeXFeedNameClaim } from '../../services/spexfeed-name-verification';
+import { SpeXFeedNameBadgeComponent } from '../spexfeed-name-badge/spexfeed-name-badge';
 
 @Component({
   selector: 'app-profile-header',
   templateUrl: './profile-header.html',
   styleUrls: ['./profile-header.css'],
-  imports: [CommonModule, ProfileActionsComponent, 
-    MtxTooltipModule , 
-    MatButtonModule,
-    MatTooltipModule, MatIconModule, RouterModule, ],
+  imports: [CommonModule, ProfileActionsComponent, SpeXFeedNameBadgeComponent, MtxTooltipModule, MatButtonModule, MatTooltipModule, MatIconModule, RouterModule],
 })
 export class ProfileHeaderComponent {
   @Input() pubkey: string = '';
@@ -42,8 +42,9 @@ export class ProfileHeaderComponent {
   qr16?: string;
   userPubKey: string;
   isValidNip05: boolean = false;
+  spexfeedNameVerification?: SpeXFeedNameVerificationResult;
 
-  constructor(public zapUi: ZapUiService, private appState: ApplicationState, public ui: UIService, public profileService: ProfileService, public dialog: MatDialog, public circleService: CircleService, public utilities: Utilities) {
+  constructor(public zapUi: ZapUiService, private spexfeedNameLookup: SpeXFeedNameLookupService, private appState: ApplicationState, public ui: UIService, public profileService: ProfileService, public dialog: MatDialog, public circleService: CircleService, public utilities: Utilities) {
     this.userPubKey = this.appState.getPublicKey();
   }
 
@@ -112,6 +113,8 @@ export class ProfileHeaderComponent {
           return;
         }
 
+        this.verifySpeXFeedName(profile);
+
         // Pre-generate the QR value as we had some issues doing it dynamically.
         if (profile.lud06) {
           this.qr06 = await QRCode.toDataURL('lightning:' + profile.lud06, {
@@ -138,6 +141,27 @@ export class ProfileHeaderComponent {
         }
       })
     );
+  }
+
+  async verifySpeXFeedName(profile: NostrProfileDocument) {
+    const claimedName = getSpeXFeedNameClaim(profile);
+    this.spexfeedNameVerification = verifySpeXFeedNameClaim(profile.pubkey, claimedName);
+
+    if (!claimedName) {
+      return;
+    }
+
+    try {
+      const lookupResult = await this.spexfeedNameLookup.resolveProfile(claimedName);
+
+      if (this.ui.profile?.pubkey !== profile.pubkey) {
+        return;
+      }
+
+      this.spexfeedNameVerification = verifySpeXFeedNameClaim(profile.pubkey, claimedName, lookupResult);
+    } catch {
+      this.spexfeedNameVerification = verifySpeXFeedNameClaim(profile.pubkey, claimedName);
+    }
   }
 
   displayNIP05(nip05: string) {

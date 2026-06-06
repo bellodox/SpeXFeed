@@ -3,8 +3,7 @@
 
   <div class="profile-banner">
     <img class="profile-banner-image" [src]="profile.banner || 'https://i.pinimg.com/564x/0b/a3/d6/0ba3d60362c7e6d256cfc1f37156bad9.jpg'" />
-</div>
-
+  </div>
 
   <div class="profile-page-header">
     <div class="profile-page-header-left">
@@ -52,6 +51,12 @@
         </span>
         <span class="follows-you" *ngIf="isFollowing(profile)">Follows you</span>
       </h2>
+      <div class="profile-labels" *ngIf="spexfeedNameVerification?.status !== 'no_claim'">
+        <div class="profile-labels-left"></div>
+        <div class="profile-labels-middle dimmed">
+          <app-spexfeed-name-badge [verification]="spexfeedNameVerification"></app-spexfeed-name-badge>
+        </div>
+      </div>
       <div class="profile-labels">
         <div class="profile-labels-left"><mat-icon class="profile-icon">key</mat-icon></div>
         <div class="profile-labels-middle dimmed">

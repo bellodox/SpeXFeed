@@ -1,7 +1,7 @@
 {
-  "name": "Blockcore Notes",
+  "name": "SpeXFeed",
   "short_name": "Notes",
-  "author": "Blockcore",
+  "author": "SpaceXpanse",
   "theme_color": "#ae1c7d",
   "background_color": "#1B1015",
   "description": "New ways to connect with humanity using Nostr",
@@ -77,7 +77,7 @@
   ],
   "screenshots": [
     {
-      "src": "assets/blockcore-notes-screenshot.png",
+      "src": "assets/spexfeed-screenshot.png",
       "sizes": "1079x776",
       "type": "image/png"
     }

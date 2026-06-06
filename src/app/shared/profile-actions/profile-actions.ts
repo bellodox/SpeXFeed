@@ -224,7 +224,7 @@ export class ProfileActionsComponent {
         .share({
           title: profile.name,
           text: profile.about,
-          url: 'https://notes.blockcore.net/p/' + profile!.pubkey,
+          url: 'https://spexfeed.spacexpanse.org/p/' + profile!.pubkey,
         })
         .then(() => console.log('Successful share'))
         .catch((error) => console.log('Error sharing', error));

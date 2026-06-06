@@ -53,6 +53,30 @@
 
           <mat-card>
             <mat-card-header>
+              <mat-card-title>SpeXFeed Name</mat-card-title>
+              <mat-card-subtitle>Public identity status for this Nostr profile.</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p class="wrap selectable"><strong>Nostr public key:</strong> {{ currentPublicKey }}</p>
+              <p *ngIf="spexfeedNameVerification?.status === 'no_claim'" class="dimmed">No SpeXFeed Name claim is set in current profile metadata.</p>
+              <app-spexfeed-name-badge [verification]="spexfeedNameVerification"></app-spexfeed-name-badge>
+              <p
+                *ngIf="spexfeedNameVerification && spexfeedNameVerification.status !== 'verified' && spexfeedNameVerification.status !== 'no_claim'"
+                class="dimmed"
+              >
+                Claimed SpeXFeed Names are treated as untrusted until the ROD record resolves to this Nostr public key.
+              </p>
+              <p>
+                <a mat-stroked-button routerLink="/register-name">Register SpeXFeed Name</a>
+                <a mat-stroked-button routerLink="/settings/name">Update SpeXFeed Name</a>
+              </p>
+            </mat-card-content>
+          </mat-card>
+
+          <br />
+
+          <mat-card>
+            <mat-card-header>
               <mat-card-title>{{ 'Settings.MediaTitle' | translate }}</mat-card-title>
               <mat-card-subtitle>{{ 'Settings.MediaSubtitle' | translate }}</mat-card-subtitle>
             </mat-card-header>
