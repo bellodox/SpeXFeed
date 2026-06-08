@@ -45,6 +45,14 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'discover/profiles',
+    loadComponent: () => import('./pages/discover-profiles/discover-profiles').then((module) => module.DiscoverProfilesComponent),
+    canActivate: [AuthGuard],
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
+  {
     path: 'discover',
     component: HomeComponent,
     canActivate: [AuthGuard],

@@ -13,10 +13,12 @@ All notable changes to this project will be documented in this file.
   - `GET /api/rod/name/:namespace/:handle/availability` — Name availability check
   - `POST /api/rod/spexfeed-name/requests` — Submit registration/update requests
   - `GET /api/rod/spexfeed-name/requests/:id` — Poll request status
+  - `GET /api/rod/names/recent?limit=25` — Recent `sf/*` profile discovery endpoint backed by `name_scan`, `sf.profile` parsing, recent-first sorting, and 30-second in-memory caching
 - Angular dev server proxy configuration (`server/proxy.conf.json`)
 - Profile-by-name navigation via `/n/:handle` route (`src/app/pages/name-resolver/name-resolver.ts`)
 - SpeXFeed name search — global search bar now routes `sf/<handle>` input to name resolver
 - Backward-compatible localStorage/IndexedDB namespace migration (`src/app/services/storage-migration.ts`) from `blockcore:notes:*` to `spexfeed:*`
+- Recent ROD profile discovery client pieces: [`src/app/services/recent-rod-names.ts`](src/app/services/recent-rod-names.ts) and lazy-loaded [`src/app/pages/discover-profiles/discover-profiles.ts`](src/app/pages/discover-profiles/discover-profiles.ts) with loading, empty, and error states
 
 ### Changed
 
@@ -44,6 +46,7 @@ All notable changes to this project will be documented in this file.
 - **Legacy Text**: Eliminated all user-visible "Notes" references — login, key import, badge editor, article editor, about page now say "SpeXFeed"
 - **Connect Page**: Overhauled landing page with SpaceXpanse dark-gradient hero, opaque feature cards, improved text contrast, and fixed broken screenshot reference
 - **Readability**: Added global `body` text color enforcement, Rajdhani heading font to toolbar, and stronger `on-surface` contrast for event/card content
+- **Home Discovery CTA**: Retargeted the SpaceXpanse "View Profiles" action from following-based navigation to the new `/discover/profiles` experience while leaving the Nostr and Bitcoin discovery entries unchanged
 
 ### Fixed
 
@@ -52,6 +55,7 @@ All notable changes to this project will be documented in this file.
 - **Settings Form**: Fixed Angular `NG01203` errors by registering `MatSlideToggleModule` and adding unique names to Settings slide-toggle controls.
 - **Authenticated Shell Readability**: Converted the authenticated app shell, sidenav, cards, form fields, and major page panels to a dark-first SpaceXpanse surface treatment with stronger text contrast.
 - **Account Drawer Testing**: Added accessible account-menu labeling and `data-testid="account-menu-button"` for reliable visual verification.
+- **HTTP Client Wiring**: Registered [`provideHttpClient()`](src/app/app.config.ts:93) in [`src/app/app.config.ts`](src/app/app.config.ts) so the recent-profile discovery client can resolve Angular `HttpClient` correctly.
 
 ### Removed
 

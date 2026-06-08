@@ -6,6 +6,7 @@ const { callRodRpc } = require('./rod-rpc');
 const app = express();
 const port = 3000;
 const pendingRequests = new Map();
+const recentNamesCache = new Map();
 
 const spexfeedNamespace = 'sf/';
 const handlePattern = /^[a-z0-9]([a-z0-9-]{0,30}[a-z0-9])?$/;
@@ -14,6 +15,9 @@ const maxValueSizeBytes = 2048;
 const pendingStatus = 'pending';
 const confirmedStatus = 'verified';
 const failedStatus = 'failed';
+const recentNamesCacheTtlMs = 30_000;
+const defaultRecentNamesLimit = 25;
+const maxRecentNamesLimit = 100;
 
 app.use(
   cors({
@@ -222,6 +226,46 @@ app.get('/api/rod/spexfeed-name/requests/:id', async (request, response) => {
   }
 });
 
+app.get('/api/rod/names/recent', async (request, response) => {
+  const requestedLimit = Number.parseInt(String(request.query.limit ?? defaultRecentNamesLimit), 10);
+  const limit = Number.isNaN(requestedLimit)
+    ? defaultRecentNamesLimit
+    : Math.min(Math.max(requestedLimit, 1), maxRecentNamesLimit);
+
+  const cacheKey = `recent:${limit}`;
+  const cachedResponse = getCachedRecentNames(cacheKey);
+
+  if (cachedResponse) {
+    response.json(cachedResponse);
+    return;
+  }
+
+  try {
+    const rpcItems = await callRodRpc('name_scan', [spexfeedNamespace, maxRecentNamesLimit]);
+    const items = Array.isArray(rpcItems)
+      ? rpcItems
+          .filter((item) => typeof item?.name === 'string' && item.name.startsWith(spexfeedNamespace))
+          .map(toRecentNameItem)
+          .filter(Boolean)
+          .sort((leftItem, rightItem) => rightItem.height - leftItem.height)
+          .slice(0, limit)
+      : [];
+
+    const payload = {
+      items,
+      total: items.length,
+    };
+
+    setCachedRecentNames(cacheKey, payload);
+    response.json(payload);
+  } catch (error) {
+    response.status(500).json({
+      error: 'rpc_error',
+      message: toPublicErrorMessage(error, 'Failed to load recent SpeXFeed names.'),
+    });
+  }
+});
+
 app.use((request, response) => {
   response.status(404).json({
     error: 'not_found',
@@ -380,6 +424,66 @@ function inferNetworkName(networkInfo) {
   }
 
   return 'mainnet';
+}
+
+function getCachedRecentNames(cacheKey) {
+  const cachedEntry = recentNamesCache.get(cacheKey);
+
+  if (!cachedEntry) {
+    return null;
+  }
+
+  if (cachedEntry.expiresAt <= Date.now()) {
+    recentNamesCache.delete(cacheKey);
+    return null;
+  }
+
+  return cachedEntry.payload;
+}
+
+function setCachedRecentNames(cacheKey, payload) {
+  recentNamesCache.set(cacheKey, {
+    payload,
+    expiresAt: Date.now() + recentNamesCacheTtlMs,
+  });
+}
+
+function toRecentNameItem(nameRecord) {
+  const parsedValue = parseJsonObject(nameRecord?.value);
+
+  if (!parsedValue || parsedValue.t !== 'sf.profile') {
+    return null;
+  }
+
+  const handle = nameRecord.name.slice(spexfeedNamespace.length);
+  const blockHeight = Number.isInteger(nameRecord.height) ? nameRecord.height : Number(nameRecord.height) || 0;
+
+  return {
+    name: nameRecord.name,
+    handle,
+    height: blockHeight,
+    txid: typeof nameRecord.txid === 'string' ? nameRecord.txid : null,
+    pubkey: typeof parsedValue.p === 'string' ? parsedValue.p : null,
+    displayName: typeof parsedValue.d === 'string' ? parsedValue.d : null,
+    valid: true,
+  };
+}
+
+function parseJsonObject(value) {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  try {
+    const parsedValue = JSON.parse(value);
+    if (!parsedValue || typeof parsedValue !== 'object' || Array.isArray(parsedValue)) {
+      return null;
+    }
+
+    return parsedValue;
+  } catch {
+    return null;
+  }
 }
 
 function isNameNotFoundError(error) {

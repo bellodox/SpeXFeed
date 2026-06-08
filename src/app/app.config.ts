@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideServiceWorker } from '@angular/service-worker';
 import { routes } from './app.routes';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { Observable, from } from 'rxjs';
 import { CheckForUpdateService } from './services/check-for-update';
@@ -45,6 +45,7 @@ const fetchLoaderFactory = () => new FetchTranslateLoader('./assets/i18n/', '.js
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
+    provideHttpClient(),
     provideAnimations(),
     importProvidersFrom([TranslateModule.forRoot({
       loader: {

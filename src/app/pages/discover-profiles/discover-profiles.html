@@ -1,0 +1,64 @@
+<div class="full-page discover-profiles-page">
+  <div class="page discover-profiles-shell">
+    <mat-card class="discover-profiles-card">
+      <mat-card-header>
+        <mat-card-title>Discover Profiles</mat-card-title>
+        <mat-card-subtitle>Recently registered SpeXFeed names from the ROD helper service.</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <section class="discover-copy" aria-label="Discover recent profiles">
+          <p><strong>Recent ROD profile handles.</strong> Browse newly discovered sf/* names and open the linked Nostr profile when the binding is valid.</p>
+        </section>
+
+        <div *ngIf="isLoading" class="loading-panel" role="status" aria-live="polite">
+          <mat-spinner diameter="36"></mat-spinner>
+          <span>Loading recent ROD profiles...</span>
+        </div>
+
+        <section *ngIf="!isLoading && hasError" class="state-panel error-panel" aria-live="polite">
+          <mat-icon>error</mat-icon>
+          <div>
+            <strong>Unable to load recent profiles.</strong>
+            <p>The helper service did not return a recent names list. Please try again later.</p>
+          </div>
+        </section>
+
+        <section *ngIf="!isLoading && !hasError && recentNames.length === 0" class="state-panel empty-panel" aria-live="polite">
+          <mat-icon>travel_explore</mat-icon>
+          <div>
+            <strong>No recent profiles found.</strong>
+            <p>No recent SpeXFeed name registrations are available right now.</p>
+          </div>
+        </section>
+
+        <mat-list *ngIf="!isLoading && recentNames.length > 0" class="discover-list">
+          <mat-list-item *ngFor="let item of recentNames; trackBy: trackByName" class="discover-list-item">
+            <div class="discover-item" matListItemTitle>
+              <div class="discover-item-copy">
+                <div class="discover-item-header">
+                  <span class="discover-handle">{{ item.handle }}</span>
+                  <span class="discover-valid" *ngIf="item.valid">Verified binding</span>
+                </div>
+                <div class="discover-display-name" *ngIf="item.displayName">{{ item.displayName }}</div>
+                <div class="discover-meta">Block #{{ item.height }}</div>
+              </div>
+
+              <a
+                *ngIf="hasProfileLink(item)"
+                mat-flat-button
+                color="primary"
+                [routerLink]="['/p', item.pubkey]">
+                View profile
+              </a>
+
+              <button *ngIf="!hasProfileLink(item)" mat-stroked-button type="button" disabled>
+                No linked profile
+              </button>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
