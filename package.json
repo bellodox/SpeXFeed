@@ -3,7 +3,9 @@
   "version": "2.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config server/proxy.conf.json",
+    "start:helper": "npm run start --prefix server",
+    "start:helper:dev": "npm run dev --prefix server",
     "hot": "ng serve --hmr",
     "static": "ng serve --no-live-reload",
     "build": "ng build",
