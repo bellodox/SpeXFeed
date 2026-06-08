@@ -290,7 +290,8 @@ header {
   box-sizing: border-box;
   overscroll-behavior-y: contain;
   overflow-x: hidden;
-  overflow-y: overlay !important;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
   background: transparent;
   color: var(--mat-sys-on-surface);
 }

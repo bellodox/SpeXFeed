@@ -219,7 +219,8 @@ body {
   // overflow: hidden;
   overscroll-behavior-y: contain;
   overflow-x: hidden;
-  overflow-y: overlay !important;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
   // overflow: scroll !important;
 
   font-family: "IBM Plex Sans", "Helvetica Neue", sans-serif;
@@ -487,8 +488,9 @@ app-profile-actions {
 .scrolling-content {
   overscroll-behavior-y: contain;
   // overflow-y: scroll;
-  overflow-y: overlay !important;
+  overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
   // overflow: overlay !important;
   // height: 300px;
   // height: 100%;
@@ -509,7 +511,8 @@ app-profile-actions {
 // }
 
 .mat-drawer-inner-container {
-  overflow: overlay !important;
+  overflow: auto;
+  scrollbar-gutter: stable;
 }
 
 /* The container for main content. */
