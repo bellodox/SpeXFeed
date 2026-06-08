@@ -993,6 +993,18 @@ small {
   min-width: 600px;
 }
 
+.consent-dialog-panel .mat-mdc-dialog-container,
+.consent-dialog-panel .mdc-dialog__surface {
+  background: var(--sf-surface-elevated) !important;
+  color: var(--mat-sys-on-surface) !important;
+}
+
+.consent-dialog-panel .mdc-dialog__surface {
+  border: 1px solid var(--sf-border-subtle);
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), var(--sf-glow-primary);
+}
+
 .hashtags {
   font-size: 0.75em;
   margin-top: 0.6em;

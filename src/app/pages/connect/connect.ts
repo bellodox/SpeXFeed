@@ -58,7 +58,7 @@ export class ConnectComponent {
     const dialogRef = this.dialog.open(ConsentDialog, {
       data: false,
       maxWidth: '100vw',
-      panelClass: 'full-width-dialog',
+      panelClass: ['full-width-dialog', 'consent-dialog-panel'],
     });
 
     dialogRef.afterClosed().subscribe(async (result) => {
