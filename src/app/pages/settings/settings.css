@@ -17,35 +17,35 @@
 }
 
 .relay-status-0 {
-  color: silver;
+  color: var(--sf-text-muted);
 }
 
 .relay-status-1 {
-  color: green;
+  color: var(--mat-success-color);
 }
 
 .relay-status-2 {
-  color: orange;
+  color: var(--mat-sys-secondary);
 }
 
 .relay-status-3 {
-  color: red;
+  color: var(--mat-sys-error);
 }
 
 .relay-status-4 {
-  color: rgb(49, 49, 210);
+  color: var(--mat-sys-tertiary);
 }
 
 .relay-read-disabled {
-  color: rgb(49, 49, 210) !important;
+  color: var(--mat-sys-tertiary) !important;
 }
 
 .relay-disabled {
-  color: rgb(234, 136, 9) !important;
+  color: var(--mat-sys-secondary) !important;
 }
 
 .primary-relay {
-  color: rgb(198, 3, 181);
+  color: var(--mat-sys-primary);
 }
 
 .relay-options {

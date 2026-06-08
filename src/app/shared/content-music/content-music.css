@@ -19,7 +19,7 @@
 }
 
 .music-artist {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--sf-text-muted);
   margin-bottom: 0.4em;
 }
 

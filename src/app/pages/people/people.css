@@ -13,6 +13,9 @@
   padding: 1em 1em 0em 1em;
   margin-bottom: 1em;
   border-radius: 10px;
+  background: var(--sf-surface-elevated);
+  border: 1px solid var(--sf-border-subtle);
+  color: var(--mat-sys-on-surface);
 }
 
 .people-list {
@@ -37,6 +40,9 @@
 
 .people-card {
   flex: 1 1 240px;
+  background: var(--sf-surface-elevated);
+  border: 1px solid var(--sf-border-subtle);
+  color: var(--mat-sys-on-surface);
 }
 
 .profile-banner {

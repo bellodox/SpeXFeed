@@ -43,13 +43,13 @@
 
 .camera-label {
   font-size: 2em;
-  color: rgba(1, 1, 1, 0.5);
+  color: var(--sf-text-muted);
   margin-left: auto;
   margin-right: auto;
 }
 
 .camera-error {
-  color: #a83222;
+  color: var(--mat-sys-error);
 }
 
 /* .mat-dialog-container {

@@ -1,9 +1,9 @@
 {
   "name": "SpeXFeed",
-  "short_name": "Notes",
+  "short_name": "SpeXFeed",
   "author": "SpaceXpanse",
-  "theme_color": "#ae1c7d",
-  "background_color": "#1B1015",
+  "theme_color": "#0B1118",
+  "background_color": "#0B1118",
   "description": "New ways to connect with humanity using Nostr",
   "orientation": "any",
   "display": "standalone",
@@ -77,8 +77,8 @@
   ],
   "screenshots": [
     {
-      "src": "assets/spexfeed-screenshot.png",
-      "sizes": "1079x776",
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ],

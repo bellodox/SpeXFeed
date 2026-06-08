@@ -5,30 +5,84 @@
 html {
   
   // Add CSS custom properties for success colors
-  --mat-success-color: #4caf50;
-  --mat-success-lighter: #c8e6c9;
-  --mat-success-darker: #2e7d32;
+  --mat-success-color: #228E52;
+  --mat-success-lighter: #BDE8CE;
+  --mat-success-darker: #0F5F33;
+
+  /* === SpeXFeed Design Tokens === */
+  --sf-surface-elevated: #111923;
+  --sf-surface-overlay: #20262E;
+  --sf-text-muted: #A1ADBC;
+  --sf-border-subtle: #3D4854;
+  --sf-border-emphasis: #008996;
+  --sf-hover-surface: #26313C;
+  --sf-scrollbar-thumb: #54606D;
+  --sf-scrollbar-thumb-hover: #8793A1;
+  --sf-glow-primary: 0 0 0 1px #5ADFEB, 0 0 18px #00A7B8;
+  --sf-glow-secondary: 0 0 0 1px #FBC84E, 0 0 16px #DFAA12;
+  --sf-active-nav-background: #00373B;
+  --sf-profile-banner-border: #008996;
+  --sf-profile-avatar-border: #FBC84E;
+  --sf-chat-bubble-sent: #00373B;
+  --sf-chat-bubble-received: #20262E;
+  --sf-media-player-background: #20262E;
+  --sf-title-bar-background: #0B1118;
+  --sf-loading-spinner-color: #006D76;
 
   @include mat.theme((
     color: (
-      theme-type: light,
+      theme-type: dark,
       // primary: mat.$azure-palette,
       // tertiary: mat.$blue-palette,
       primary: notes-theme.$primary-palette,
       tertiary: notes-theme.$tertiary-palette,
     ),
-    typography: Roboto,
+    typography: 'IBM Plex Sans',
     density: 0,
   ));
+
+  --mat-sys-background: #05080D;
+  --mat-sys-surface: #111923;
+  --mat-sys-surface-container: #111923;
+  --mat-sys-surface-container-low: #0B1118;
+  --mat-sys-surface-container-high: #20262E;
+  --mat-sys-on-background: #E9EDF5;
+  --mat-sys-on-surface: #E9EDF5;
+  --mat-sys-on-surface-variant: #C8D2DF;
+  --mdc-filled-text-field-container-color: #111923;
+  --mdc-outlined-text-field-label-text-color: #C8D2DF;
+  --mdc-outlined-text-field-input-text-color: #E9EDF5;
+  --mdc-outlined-text-field-outline-color: #3D4854;
+  color-scheme: dark;
   
 }
 
 .dark {
   
   // Add CSS custom properties for success colors in dark mode
-  --mat-success-color: #66bb6a;
-  --mat-success-lighter: #a5d6a7;
-  --mat-success-darker: #388e3c;
+  --mat-success-color: #57D989;
+  --mat-success-lighter: #BDE8CE;
+  --mat-success-darker: #1FA463;
+
+  /* === SpeXFeed Design Tokens === */
+  --sf-surface-elevated: #111923;
+  --sf-surface-overlay: #20262E;
+  --sf-text-muted: #A1ADBC;
+  --sf-border-subtle: #3D4854;
+  --sf-border-emphasis: #5ADFEB;
+  --sf-hover-surface: #26313C;
+  --sf-scrollbar-thumb: #54606D;
+  --sf-scrollbar-thumb-hover: #8793A1;
+  --sf-glow-primary: 0 0 0 1px #00A7B8, 0 0 22px #006D76;
+  --sf-glow-secondary: 0 0 0 1px #FBC84E, 0 0 18px #7B5C00;
+  --sf-active-nav-background: #00373B;
+  --sf-profile-banner-border: #22C6D8;
+  --sf-profile-avatar-border: #FBC84E;
+  --sf-chat-bubble-sent: #00373B;
+  --sf-chat-bubble-received: #20262E;
+  --sf-media-player-background: #0B1118;
+  --sf-title-bar-background: #05080D;
+  --sf-loading-spinner-color: #5ADFEB;
   
   @include mat.theme((
     color: (
@@ -36,7 +90,8 @@ html {
       primary: notes-theme.$primary-palette,
       // primary: mat.$azure-palette,
       // tertiary: mat.$blue-palette,
-    )
+    ),
+    typography: 'IBM Plex Sans',
   ));
   
 }
@@ -47,14 +102,13 @@ a {
 }
 
 a:hover {
-  transition: text-decoration 250ms ease;
-  transition: color 250ms ease;
+  transition: color 250ms ease, text-decoration 250ms ease;
   color: var(--mat-sys-inverse-primary);
 }
 
 :root {
   @include mat.progress-spinner-overrides((
-    active-indicator-color: white,
+    active-indicator-color: var(--sf-loading-spinner-color),
   ));
 }
 
@@ -168,8 +222,9 @@ body {
   overflow-y: overlay !important;
   // overflow: scroll !important;
 
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: var(--mat-sys-background);
+  font-family: "IBM Plex Sans", "Helvetica Neue", sans-serif;
+  background: radial-gradient(circle at 12% 0%, rgba(0, 167, 184, 0.2), transparent 32%), linear-gradient(135deg, #05080d 0%, #0b1118 46%, #111923 100%);
+  color: var(--mat-sys-on-surface);
 
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
@@ -212,8 +267,21 @@ body {
 // }
 
 * {
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "IBM Plex Sans", "Helvetica Neue", sans-serif;
   // font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.mat-toolbar,
+.mat-mdc-toolbar,
+mat-toolbar {
+  font-family: "Rajdhani", "IBM Plex Sans", sans-serif;
+  line-height: 1.12;
 }
 
 .app-container {
@@ -236,6 +304,60 @@ body {
   flex-grow: 2;
   height: 100%;
   overflow: hidden;
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+}
+
+mat-sidenav-container,
+mat-sidenav-content,
+.mat-drawer-container,
+.mat-drawer-content,
+.scrolling-content {
+  background: transparent !important;
+  color: var(--mat-sys-on-surface);
+}
+
+mat-sidenav,
+.mat-drawer,
+.sidenav,
+.sidenav-right {
+  background: linear-gradient(180deg, var(--sf-surface-elevated), #0b1118) !important;
+  border-color: var(--sf-border-subtle) !important;
+  color: var(--mat-sys-on-surface) !important;
+}
+
+.mat-mdc-card,
+mat-card,
+.events,
+.people,
+.search,
+.profile-page-header {
+  background: var(--sf-surface-elevated) !important;
+  border: 1px solid var(--sf-border-subtle);
+  color: var(--mat-sys-on-surface) !important;
+}
+
+.events-header,
+.content,
+.mat-mdc-card-content,
+.mat-mdc-card-title,
+.mat-mdc-card-subtitle,
+.mat-mdc-form-field,
+.mat-mdc-select-value,
+.mat-mdc-select-arrow,
+.mat-mdc-tab,
+.mat-mdc-tab-link,
+.mat-mdc-menu-item,
+.mdc-list-item__primary-text {
+  color: var(--mat-sys-on-surface) !important;
+}
+
+.mat-mdc-card-subtitle,
+.dimmed,
+small,
+.content-item-label,
+mat-hint {
+  color: var(--sf-text-muted) !important;
 }
 
 .full-page {
@@ -438,7 +560,7 @@ app-profile-actions {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #595b5ca4;
+  background-color: var(--sf-scrollbar-thumb);
   // border-radius: 20px;
   border-left: 6px solid transparent;
   border-top: 6px solid transparent;
@@ -446,7 +568,7 @@ app-profile-actions {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #a3a5a7c2;
+  background-color: var(--sf-scrollbar-thumb-hover);
   border-left: 6px solid transparent;
   border-top: 6px solid transparent;
 }
@@ -462,7 +584,7 @@ app-profile-actions {
 
 .above-event {
   // background-color: #303030 !important;
-  background-color: rgba(89, 91, 92, 0.6431372549);
+  background-color: var(--sf-hover-surface);
 }
 
 .current-event {
@@ -488,7 +610,7 @@ app-profile-actions {
   height: 40px;
   width: 40px;
   margin-right: 1em;
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: var(--sf-surface-elevated);
   border: 0;
   // padding: 1em;
   text-decoration: none;
@@ -500,7 +622,7 @@ app-profile-actions {
 .profile-button:hover {
   text-decoration: none;
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.65);
+  background-color: var(--sf-surface-elevated);
 }
 
 .profile-button-icon {
@@ -517,24 +639,27 @@ app-profile-actions {
   padding: 1em;
   margin-bottom: 0;
   border-radius: 10px !important;
+  color: var(--mat-sys-on-surface);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
 }
 
 .people {
   padding: 1em;
   margin-bottom: 0;
   border-radius: 10px !important;
+  color: var(--mat-sys-on-surface);
 }
 
 .circle.clickable:hover {
   // background-color: #535353;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--sf-hover-surface);
   cursor: pointer;
   transition: background-color 250ms ease;
 }
 
 .people.clickable:hover {
   // background-color: #535353;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--sf-hover-surface);
   cursor: pointer;
   transition: background-color 250ms ease;
 }
@@ -546,13 +671,13 @@ app-profile-actions {
 
 .events.clickable:hover {
   // background-color: #535353;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--sf-hover-surface);
   cursor: pointer;
   transition: background-color 250ms ease;
 }
 
 .noclick:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--sf-hover-surface);
   // background-color: #424242;
   cursor: default;
 }
@@ -562,6 +687,7 @@ app-profile-actions {
   gap: 0.4em;
   display: flex;
   flex-direction: row;
+  color: var(--mat-sys-on-surface);
 }
 
 .events-header app-event-header {
@@ -764,6 +890,7 @@ app-profile-actions {
   padding: 0.2em 0.2em 0.2em 0.2em;
   overflow-wrap: break-word;
   white-space: pre-line;
+  color: var(--mat-sys-on-surface);
 }
 
 .linebreaks {
@@ -926,7 +1053,7 @@ mat-card-footer {
 }
 
 .error {
-  color: rgb(219, 2, 2) !important;
+  color: var(--mat-sys-error) !important;
 }
 
 @media only screen and (max-height: 200px) {
@@ -1017,7 +1144,7 @@ mat-card-footer {
     flex: 0 0 33px;
     display: flex;
     flex-direction: row;
-    background-color: #212121;
+    background-color: var(--sf-title-bar-background);
     left: env(titlebar-area-x, 0);
     top: env(titlebar-area-y, 0);
     height: env(titlebar-area-height, 33px);

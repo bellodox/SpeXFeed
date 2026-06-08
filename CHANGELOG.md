@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- [`docs/maintainer-wiki/design-system.md`](docs/maintainer-wiki/design-system.md) — Complete SpaceXpanse brand design system specification
 - ROD helper backend service (`server/`) — Node.js/Express service mediating browser requests to ROD RPC at `127.0.0.1:11999`
   - `GET /api/rod/status` — ROD node connection status
   - `GET /api/rod/name/:namespace/:handle` — ROD name lookup
@@ -19,6 +20,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Visual Identity**: Complete SpaceXpanse brand transformation — new color system (cyan/teal primary, amber secondary, violet tertiary), Rajdhani + IBM Plex Sans typography, dark-first aesthetic
+- **Design Tokens**: Introduced ~20 semantic `--sf-*` CSS custom properties for consistent theming across light and dark modes
+- **Material Palettes**: Replaced magenta/pink (`#ae1c7d`) Material 3 palettes with space-tech cyan/teal palette system in [`styles-theme.scss`](src/styles-theme.scss)
+- **Component Styles**: Eliminated hardcoded colors from 12+ component CSS files, replacing them with semantic design tokens
+- **PWA Metadata**: Updated manifest theme/background colors to `#0B1118`, fixed `short_name` from `Notes` to `SpeXFeed`
+- **Typography**: Switched from Roboto to Rajdhani (headings) + IBM Plex Sans (body) via Google Fonts
 - **Full rebrand from Blockcore Notes to SpeXFeed** across all user-facing surfaces:
   - Package name (`package.json`), Angular project name (`angular.json`), browser title, Open Graph metadata (`src/index.html`)
   - PWA manifest (`src/manifest.webmanifest`), Tauri desktop config, GitHub Actions workflow
@@ -33,11 +40,20 @@ All notable changes to this project will be documented in this file.
   - Android asset links, Tauri identifiers → `org.spacexpanse.spexfeed`
   - Curated follow suggestions updated to SpaceXpanse community
   - Commented theme variables and legacy code references updated
+- **Brand Assets**: Replaced all icon/logo assets with SpaceXpanse official logo (14 icon sizes + WebP variants generated from source)
+- **Legacy Text**: Eliminated all user-visible "Notes" references — login, key import, badge editor, article editor, about page now say "SpeXFeed"
+- **Connect Page**: Overhauled landing page with SpaceXpanse dark-gradient hero, opaque feature cards, improved text contrast, and fixed broken screenshot reference
+- **Readability**: Added global `body` text color enforcement, Rajdhani heading font to toolbar, and stronger `on-surface` contrast for event/card content
 
 ### Fixed
 
 - ROD helper backend route definitions updated to handle slash-containing names (`sf/handle`) via explicit namespace/handle path segments
+- **Authenticated UX**: Registered the missing `/update-name` route so the Settings "Update SpeXFeed Name" action no longer opens a blank page.
+- **Settings Form**: Fixed Angular `NG01203` errors by registering `MatSlideToggleModule` and adding unique names to Settings slide-toggle controls.
+- **Authenticated Shell Readability**: Converted the authenticated app shell, sidenav, cards, form fields, and major page panels to a dark-first SpaceXpanse surface treatment with stronger text contrast.
+- **Account Drawer Testing**: Added accessible account-menu labeling and `data-testid="account-menu-button"` for reliable visual verification.
 
 ### Removed
 
 - Stale generated files: `ng-serve-smoke.log`, `ng-serve-smoke-final.log`, `dependencies.txt`, `server/helper-service.log`
+- Deleted legacy Blockcore image assets: `blockcore-light-small.png`, `blockcore-notes-screenshot.png`, `blockcore-notes-social.png`

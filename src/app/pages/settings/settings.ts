@@ -25,6 +25,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CommonModule } from '@angular/common';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatInputModule } from '@angular/material/input';
@@ -42,7 +43,7 @@ import { migratedGetItem } from '../../services/storage-migration';
   imports: [
     ClipboardModule,
     SpeXFeedNameBadgeComponent,
-    MatTabsModule, MatIconModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatSelectModule, TranslateModule, CommonModule, RouterLink]
+    MatTabsModule, MatIconModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule, MatSelectModule, MatSlideToggleModule, TranslateModule, CommonModule, RouterLink]
 })
 export class SettingsComponent {
   @ViewChild(MatAccordion) accordion!: MatAccordion;
@@ -85,6 +86,10 @@ export class SettingsComponent {
 
   openMediaPlayer() {
     this.optionsService.values.showMediaPlayer = true;
+  }
+
+  handleThemeModeChanged(darkMode: boolean) {
+    this.theme.darkMode = darkMode;
   }
 
   async primaryRelay(relay: NostrRelay) {

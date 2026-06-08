@@ -193,7 +193,7 @@ export class EditorBadgesComponent {
 
     await this.navigation.saveBadgeDefinition(blog);
 
-    this.snackBar.open(`Badge design was published. Notes does not support viewing badge designs yet.`, 'Hide', {
+    this.snackBar.open(`Badge design was published. SpeXFeed does not support viewing badge designs yet.`, 'Hide', {
       duration: 2000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',

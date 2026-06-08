@@ -264,7 +264,7 @@ export class EditorComponent {
 
     await this.navigation.saveArticle(blog);
 
-    this.snackBar.open(`Article was published. Notes does not support viewing articles yet.`, 'Hide', {
+    this.snackBar.open(`Article was published. SpeXFeed does not support viewing articles yet.`, 'Hide', {
       duration: 2000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',

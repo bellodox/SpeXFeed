@@ -41,7 +41,7 @@
 
               <mat-form-field class="input-full-width">
                 <mat-label>{{ 'Settings.ChooseMode' | translate }}</mat-label>
-                <mat-select (selectionChange)="theme.darkMode = !theme.darkMode" [value]="theme.darkMode">
+                <mat-select [value]="theme.darkMode" (selectionChange)="handleThemeModeChanged($event.value)">
                   <mat-option [value]="true">{{ 'Settings.Dark' | translate }}</mat-option>
                   <mat-option [value]="false">{{ 'Settings.Light' | translate }}</mat-option>
                 </mat-select>
@@ -111,7 +111,7 @@
             </mat-card-header>
             <mat-card-content>
               <p>{{'Settings.ReactionsNote' | translate }}</p>
-              <mat-slide-toggle class="options-slider" (change)="optionsService.save()" [(ngModel)]="optionsService.values.enableReactions">{{ 'Settings.EnableReactions' | translate }}</mat-slide-toggle>
+              <mat-slide-toggle name="enableReactions" class="options-slider" (change)="optionsService.save()" [(ngModel)]="optionsService.values.enableReactions">{{ 'Settings.EnableReactions' | translate }}</mat-slide-toggle>
             </mat-card-content>
           </mat-card>
 
@@ -123,7 +123,7 @@
               <mat-card-subtitle>{{ 'Settings.ZappingSubtitle' | translate }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
-              <mat-slide-toggle class="options-slider" (change)="optionsService.save()" [(ngModel)]="optionsService.values.enableZapping">{{ 'Settings.EnableZapping' | translate }}</mat-slide-toggle>
+              <mat-slide-toggle name="enableZapping" class="options-slider" (change)="optionsService.save()" [(ngModel)]="optionsService.values.enableZapping">{{ 'Settings.EnableZapping' | translate }}</mat-slide-toggle>
             </mat-card-content>
           </mat-card>
 
@@ -136,8 +136,8 @@
             </mat-card-header>
             <mat-card-content>
               <p>{{ 'Settings.MediaWidgetsNote' | translate }}</p>
-              <mat-slide-toggle class="options-slider" (change)="optionsService.save()" [(ngModel)]="optionsService.values.enableSpotify">{{ 'Settings.EnableSpotify' | translate }}</mat-slide-toggle>
-              <mat-slide-toggle class="options-slider" (change)="optionsService.save()" [(ngModel)]="optionsService.values.enableTidal">{{ 'Settings.EnableTidal' | translate }}</mat-slide-toggle>
+              <mat-slide-toggle name="enableSpotify" class="options-slider" (change)="optionsService.save()" [(ngModel)]="optionsService.values.enableSpotify">{{ 'Settings.EnableSpotify' | translate }}</mat-slide-toggle>
+              <mat-slide-toggle name="enableTidal" class="options-slider" (change)="optionsService.save()" [(ngModel)]="optionsService.values.enableTidal">{{ 'Settings.EnableTidal' | translate }}</mat-slide-toggle>
               <p><button mat-button (click)="openMediaPlayer()">{{ 'Settings.OpenMediaPlayer' | translate }}</button></p>
             </mat-card-content>
           </mat-card>

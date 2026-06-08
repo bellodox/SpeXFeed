@@ -1,7 +1,7 @@
 .media-player {
   display: flex;
   flex-direction: row;
-  background-color: #212121;
+  background-color: var(--sf-media-player-background);
   height: 96px;
 }
 
@@ -84,7 +84,7 @@
 }
 
 .music-artist {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--sf-text-muted);
   font-size: 0.65em;
   overflow: hidden;
   text-overflow: ellipsis;

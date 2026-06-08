@@ -6,6 +6,7 @@
 - [Open work](open-work.md) — Outstanding documentation and engineering follow-ups
 - [Tech stack](tech-stack.md) — Evidence-backed technology inventory
 - [Workflows](workflows.md) — Common development and maintenance procedures
+- [Design system](design-system.md) — SpaceXpanse SpeXFeed visual rebrand palette, typography, tokens, and implementation notes
 - [Concept: Architecture overview](concept-architecture-overview.md) — High-level application structure and responsibilities
 - [Concept: Nostr relay and event flow](concept-nostr-relay-event-flow.md) — Relay, worker, storage, and event-processing flow
 - [ROD Name and Nostr Profile Binding](ROD-NAME-PROFILE-BINDING.md) — How `sf/<handle>` records connect ROD names to Nostr profiles in MVP 1.1

@@ -5,7 +5,7 @@
 
 .error {
   margin-bottom: 1em;
-  color: red;
+  color: var(--mat-sys-error);
 }
 
 .full-button {

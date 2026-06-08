@@ -3,7 +3,9 @@
 }
 
 .update-name-card {
-  border: 1px solid rgba(148, 163, 184, 0.28);
+  border: 1px solid var(--sf-border-subtle);
+  background: var(--sf-surface-elevated);
+  color: var(--mat-sys-on-surface);
 }
 
 .identity-copy,
@@ -15,8 +17,8 @@
 }
 
 .identity-copy {
-  background: rgba(250, 204, 21, 0.12);
-  border: 1px solid rgba(250, 204, 21, 0.35);
+  background: color-mix(in srgb, var(--mat-sys-secondary) 18%, var(--sf-surface-elevated));
+  border: 1px solid color-mix(in srgb, var(--mat-sys-secondary) 35%, transparent);
 }
 
 .update-name-form {
@@ -33,8 +35,8 @@
 }
 
 .rotation-warning {
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: color-mix(in srgb, var(--mat-sys-secondary) 18%, var(--sf-surface-elevated));
+  border: 1px solid color-mix(in srgb, var(--mat-sys-secondary) 35%, transparent);
 }
 
 .check-row {
@@ -44,8 +46,9 @@
 }
 
 .preview-panel {
-  background: rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: var(--sf-surface-overlay);
+  border: 1px solid var(--sf-border-subtle);
+  color: var(--mat-sys-on-surface);
 }
 
 .preview-panel pre {
@@ -54,13 +57,15 @@
   overflow: auto;
   white-space: pre-wrap;
   word-break: break-word;
+  color: var(--mat-sys-on-surface);
 }
 
 .status-panel {
   align-items: center;
-  background: rgba(148, 163, 184, 0.12);
-  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: color-mix(in srgb, var(--sf-text-muted) 14%, var(--sf-surface-elevated));
+  border: 1px solid var(--sf-border-subtle);
   border-radius: 14px;
+  color: var(--mat-sys-on-surface);
   display: flex;
   gap: 0.75rem;
   margin-top: 1rem;
@@ -68,23 +73,23 @@
 }
 
 .status-panel.positive {
-  background: rgba(34, 197, 94, 0.12);
-  border-color: rgba(34, 197, 94, 0.35);
+  background: color-mix(in srgb, var(--mat-success-color) 12%, transparent);
+  border-color: color-mix(in srgb, var(--mat-success-color) 35%, transparent);
 }
 
 .status-panel.warning {
-  background: rgba(245, 158, 11, 0.12);
-  border-color: rgba(245, 158, 11, 0.35);
+  background: color-mix(in srgb, var(--mat-sys-secondary) 12%, transparent);
+  border-color: color-mix(in srgb, var(--mat-sys-secondary) 35%, transparent);
 }
 
 .status-panel.error {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.35);
+  background: color-mix(in srgb, var(--mat-sys-error) 12%, transparent);
+  border-color: color-mix(in srgb, var(--mat-sys-error) 35%, transparent);
 }
 
 .error-list,
 .error-text {
-  color: #dc2626;
+  color: var(--mat-sys-error);
 }
 
 @media only screen and (max-width: 599px) {

@@ -13,6 +13,22 @@
 
 .help {
   padding-left: 10em;
+  color: var(--mat-sys-on-surface);
+}
+
+.help p,
+.help li,
+.help dd {
+  color: var(--mat-sys-on-surface);
+}
+
+.help section,
+.help details,
+.help mat-card {
+  background: var(--sf-surface-elevated);
+  border: 1px solid var(--sf-border-subtle);
+  border-radius: 16px;
+  color: var(--mat-sys-on-surface);
 }
 
 @media only screen and (max-width: 599px) {

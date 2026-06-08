@@ -305,6 +305,14 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'update-name',
+    component: UpdateNameComponent,
+    canActivate: [AuthGuard],
+    resolve: {
+      data: LoadingResolverService,
+    },
+  },
+  {
     path: 'settings/name',
     component: UpdateNameComponent,
     canActivate: [AuthGuard],

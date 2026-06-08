@@ -53,8 +53,16 @@
   text-overflow: ellipsis;
 }
 
+.mdc-list-item {
+  transition: background-color 200ms ease, box-shadow 200ms ease;
+}
+
 .mdc-list-item.active {
-  background: rgba(156, 39, 176, 0.15);
+  background: var(--sf-active-nav-background);
+}
+
+.mdc-list-item.active:hover {
+  box-shadow: var(--sf-glow-primary);
 }
 
 header {
@@ -69,8 +77,9 @@ header {
 }
 
 .bg {
-  border-bottom: 3px solid #9c27b0;
+  border-bottom: 3px solid var(--sf-profile-banner-border);
   height: 220px;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 
 .bio:hover > .desc {
@@ -94,12 +103,13 @@ header {
 
 .avatar {
   width: 100%;
-  border: 3px solid #9c27b0;
+  border: 3px solid var(--sf-profile-avatar-border);
   border-radius: 50%;
   overflow: hidden;
   position: relative;
   width: 96px;
   height: 96px;
+  transition: border-color 200ms ease, box-shadow 200ms ease, opacity 200ms ease;
 }
 
 .avatar:hover {
@@ -114,6 +124,10 @@ header {
   width: 38px;
   height: 38px;
   margin-left: 0.2em;
+   padding: 0;
+   border: 0;
+   background: transparent;
+   transition: opacity 200ms ease, box-shadow 200ms ease;
 }
 
 .topavatar:hover {
@@ -121,13 +135,27 @@ header {
   cursor: pointer;
 }
 
+.topavatar img {
+  display: block;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .nav-link {
-  color: var(--mat-sys-on-background) !important;
+  color: var(--mat-sys-on-surface) !important;
+}
+
+.nav-link mat-icon,
+.nav-link span,
+.mdc-list-item__primary-text {
+  color: #E9EDF5 !important;
 }
 
 .data {
   margin-top: 0.6em;
-  color: #81878b;
+  color: var(--sf-text-muted);
 }
 
 .data li {
@@ -155,11 +183,11 @@ header {
 .desc {
   position: absolute;
   top: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--sf-surface-overlay);
   width: 100%;
   height: 100%;
   max-height: 220px;
-  color: white;
+  color: var(--mat-sys-on-primary);
   text-align: center;
   opacity: 0.8;
   transition-property: all;
@@ -253,6 +281,8 @@ header {
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  background: radial-gradient(circle at 80% 8%, rgba(90, 223, 235, 0.1), transparent 28%), linear-gradient(135deg, #05080d 0%, #0b1118 48%, #111923 100%);
+  color: var(--mat-sys-on-surface);
 }
 
 .app-outlet {
@@ -261,6 +291,8 @@ header {
   overscroll-behavior-y: contain;
   overflow-x: hidden;
   overflow-y: overlay !important;
+  background: transparent;
+  color: var(--mat-sys-on-surface);
 }
 
 .app-mediaplayer {

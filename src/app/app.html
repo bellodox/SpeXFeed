@@ -13,7 +13,7 @@
 
   <mat-toolbar class="app-toolbar">
     @if(!appState.showSearch && (isHandset$ | async) === true) {
-    <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+    <button type="button" aria-label="Open navigation" mat-icon-button (click)="drawer.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
     }
@@ -61,7 +61,9 @@
 
     <button *ngIf="!appState.connected" [mtBasicSpinner]="true" mat-icon-button></button>
 
-    <img *ngIf="!appState.showSearch" width="38" height="38" mat-icon-button (click)="draweraccount.toggle()" [src]="profile?.picture" onerror="this.src='/assets/profile.png'" alt="avatar" class="topavatar" />
+    <button *ngIf="!appState.showSearch" type="button" mat-icon-button (click)="draweraccount.toggle()" aria-label="Open account menu" data-testid="account-menu-button" class="topavatar">
+      <img width="38" height="38" [src]="profile?.picture" onerror="this.src='/assets/profile.png'" alt="" />
+    </button>
   </mat-toolbar>
 
   <mat-sidenav-container autosize="true">
