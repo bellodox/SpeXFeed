@@ -71,10 +71,9 @@ export class NostrService {
             reject('Invalid Nostr event.');
           }
 
-          const signature = finalizeEvent(event, hexToBytes(prvkey)) as any;
-          event.sig = signature;
+          const signedEvent = finalizeEvent(event, hexToBytes(prvkey)) as any;
 
-          resolve(event);
+          resolve(signedEvent);
         });
       });
     }

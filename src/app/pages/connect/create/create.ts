@@ -115,8 +115,7 @@ export class CreateProfileComponent {
           this.error = 'Unable to validate the event. Cannot continue.';
         }
 
-        const signature = finalizeEvent(signedEvent, hexToBytes(this.privateKeyHex)) as any;
-        signedEvent.sig = signature;
+        signedEvent = finalizeEvent(signedEvent, hexToBytes(this.privateKeyHex)) as any;
 
         // Make sure we reset the secrets.
         this.mnemonic = '';
@@ -155,7 +154,7 @@ export class CreateProfileComponent {
     }
 
     if (this.privateKey.startsWith('nsec')) {
-      this.privateKeyHex = nip19.decode(this.privateKey).data as any;
+      this.privateKeyHex = bytesToHex(nip19.decode(this.privateKey).data as Uint8Array);
     } else {
       this.privateKeyHex = this.privateKey;
     }
