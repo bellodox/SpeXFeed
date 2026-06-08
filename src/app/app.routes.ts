@@ -41,6 +41,11 @@ import { UpdateNameComponent } from './pages/update-name/update-name';
 export const routes: Routes = [
   {
     path: '',
+    redirectTo: 'feed',
+    pathMatch: 'full',
+  },
+  {
+    path: 'discover',
     component: HomeComponent,
     canActivate: [AuthGuard],
     resolve: {
