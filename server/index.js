@@ -158,6 +158,14 @@ app.post('/api/rod/spexfeed-name/requests', async (request, response) => {
       blockHeight,
     });
   } catch (error) {
+    if (isNameAlreadyExistsError(error)) {
+      response.status(409).json({
+        error: 'name_exists',
+        message: 'This SpeXFeed Name is already registered.',
+      });
+      return;
+    }
+
     response.status(500).json({
       error: 'rpc_error',
       message: toPublicErrorMessage(error, 'Failed to submit name request.'),
@@ -381,6 +389,15 @@ function isNameNotFoundError(error) {
 
   const message = error.message.toLowerCase();
   return message.includes('name not found') || message.includes('not found') || Number(error.code) === -4;
+}
+
+function isNameAlreadyExistsError(error) {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  const message = error.message.toLowerCase();
+  return message.includes('name exists already') || message.includes('already exists');
 }
 
 function toPublicErrorMessage(error, fallbackMessage) {

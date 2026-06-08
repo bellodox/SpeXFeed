@@ -83,7 +83,7 @@ Current endpoint assumptions:
 
 Lookup and update flows also depend on the browser-safe name lookup adapter in `src/app/services/spexfeed-name-lookup.ts`, which currently targets:
 
-- lookup request: `GET /api/rod/name/:rodName`
+- lookup request: `GET /api/rod/name/:namespace/:handle`
 
 ### Backend/helper API requirements
 
@@ -91,10 +91,21 @@ The currently implemented browser flow expects the helper/backend API to satisfy
 
 | Area | Requirement | Evidence |
 | --- | --- | --- |
-| Lookup | `GET /api/rod/name/:rodName` returns JSON with `found`, optional `name`, and optional `value`. `404` is treated as not found/available. | `src/app/services/spexfeed-name-lookup.ts` |
+| Lookup | `GET /api/rod/name/:namespace/:handle` returns JSON with `found`, optional `name`, and optional `value`. `404` is treated as not found/available. The frontend adapter must split canonical names like `sf/alice` into separate path segments rather than URL-encoding the slash. | `src/app/services/spexfeed-name-lookup.ts`, `server/index.js` |
 | Registration submit | `POST /api/rod/spexfeed-name/requests` accepts a JSON body containing the canonical `sf.profile` payload plus normalized `handle`, `rodName`, `nostrPubkey`, and `action`. | `src/app/services/spexfeed-name-registration.ts` |
 | Request status | `GET /api/rod/spexfeed-name/requests/:requestId` returns JSON confirmation state with `pending`, `verified`, or `failed`. | `src/app/services/spexfeed-name-registration.ts` |
 | Content type | Successful helper responses for lookup, submit, and status polling must return `Content-Type: application/json`. HTML fallback pages and other non-JSON payloads are treated as backend/API configuration errors. | `src/app/services/spexfeed-name-registration.ts`, `src/app/services/spexfeed-name-lookup.ts`, `src/app/services/spexfeed-name-http-adapters.spec.ts` |
+| Duplicate registration | If the `sf/<handle>` name already exists, registration submit should return HTTP `409` with a semantic error payload rather than a generic `500`. | `server/index.js` |
+
+### Local helper/RPC compatibility notes
+
+The current local helper implementation assumes a wallet-scoped ROD RPC path rather than the node root path. In the validated workspace setup, the helper uses the loaded `VoidRunner` wallet path in `server/rod-rpc.js` so write methods such as `name_register` and `name_update` do not fail with a "wallet file not specified" RPC error.
+
+This means local maintainers must keep three layers aligned:
+
+1. Angular dev server proxying `/api/...` to the helper service.
+2. Helper endpoint routing in `server/index.js`.
+3. Wallet-scoped RPC access in `server/rod-rpc.js`.
 
 Maintainers should treat HTML responses from these routes as a proxy or helper misconfiguration, not as a valid application-level failure case. The implemented adapters now surface a controlled backend/API configuration error instead of leaking raw JSON parse failures.
 
@@ -149,6 +160,12 @@ Important meanings:
 
 - `pending` may mean helper confirmation is still pending **or** that confirmation was reported but the updated record has not yet been observed through lookup.
 - `verified` means the updated record was confirmed and detected with matching linked key and fresh timestamp.
+
+### Key-mismatch protection
+
+When the loaded `sf.profile` record points to a different Nostr public key than the currently authenticated user, the update page intentionally blocks submission. The page still loads the existing record and JSON preview, but reports a mismatch state so maintainers/testers do not accidentally overwrite another linked key.
+
+This protection is implemented in `src/app/pages/update-name/update-name.ts` and is working as intended in the current alpha behavior.
 
 ## Expected alpha tester journey
 

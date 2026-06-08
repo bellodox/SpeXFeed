@@ -4,7 +4,8 @@ const RPC_HOST = '127.0.0.1';
 const RPC_PORT = 11999;
 const RPC_USERNAME = 'xuser1';
 const RPC_PASSWORD = 'xpass1';
-const RPC_PATH = '/';
+const RPC_WALLET = 'VoidRunner';
+const RPC_PATH = `/wallet/${RPC_WALLET}`;
 const REQUEST_TIMEOUT_MS = 10000;
 
 function createRpcError(message, code, details) {

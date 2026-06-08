@@ -85,10 +85,12 @@ This alpha depends on backend/helper services for lookup and registration/update
 
 Current browser-facing adapter assumptions:
 
-- lookup: `/api/rod/name/:name`
+- lookup: `/api/rod/name/:namespace/:handle`
 - registration/update request flow: `/api/rod/spexfeed-name/requests`
 
 Those integrations should be documented as alpha dependencies, not as production-hardened infrastructure. SpeXFeed does not claim browser custody of ROD private keys.
+
+The current validated local helper also depends on wallet-scoped RPC access for write methods. In this workspace, helper-side registration/update calls are routed through a loaded wallet path in `server/rod-rpc.js` rather than the bare RPC root path.
 
 ## Related documentation
 

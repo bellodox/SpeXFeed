@@ -150,7 +150,13 @@ export class SpeXFeedHttpNameLookupAdapter implements SpeXFeedNameLookupAdapter 
   endpoint = '/api/rod/name';
 
   async lookupName(rodName: string): Promise<SpeXFeedNameLookupResponse> {
-    const response = await fetch(`${this.endpoint}/${encodeURIComponent(rodName)}`);
+    const [namespace, handle] = rodName.split('/');
+
+    if (!namespace || !handle) {
+      throw new Error('Name lookup requires canonical sf/<handle> format.');
+    }
+
+    const response = await fetch(`${this.endpoint}/${encodeURIComponent(namespace)}/${encodeURIComponent(handle)}`);
 
     if (response.status === 404) {
       return {
@@ -276,4 +282,3 @@ function createInvalidRecordResult(status: 'invalid_record' | 'wrong_type', erro
     errors,
   };
 }
-
