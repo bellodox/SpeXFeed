@@ -122,37 +122,33 @@ export class ProfileService {
   }
 
   async search(searchText: string) {
-    // TODO: Implement search on new database logic.
-    return;
-    // this.table.filter((x) => x.name.toLowerCase().indexOf(searchText) > -1).toArray();
-    // return this.table
-    //   .filter((profile) => {
-    //     if (profile.status == 3) {
-    //       // Filter out blocked results.
-    //       return false;
-    //     }
+    const normalizedSearchText = searchText.trim().toLowerCase();
 
-    //     let index = profile.name?.toLocaleLowerCase().indexOf(searchText);
+    if (!normalizedSearchText) {
+      return [];
+    }
 
-    //     if (index > -1) {
-    //       return true;
-    //     }
+    return this.following
+      .filter((profile) => {
+        if (profile.status === ProfileStatus.Block) {
+          return false;
+        }
 
-    //     index = profile.nip05?.toLocaleLowerCase().indexOf(searchText);
+        const searchableValues = [
+          profile.name,
+          profile.display_name,
+          profile.nip05,
+          profile.npub,
+          profile.pubkey,
+          profile.spexfeed_name,
+          profile.spexfeedName,
+          profile.sf_name,
+          profile.spexfeed?.name,
+        ];
 
-    //     if (index > -1) {
-    //       return true;
-    //     }
-
-    //     index = profile.display_name?.toLocaleLowerCase().indexOf(searchText);
-
-    //     if (index > -1) {
-    //       return true;
-    //     }
-
-    //     return false;
-    //   })
-    //   .toArray();
+        return searchableValues.some((value) => value?.toLowerCase().includes(normalizedSearchText));
+      })
+      .slice(0, 20);
   }
 
   // mutedProfiles() {

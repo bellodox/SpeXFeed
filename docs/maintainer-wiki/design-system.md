@@ -332,6 +332,13 @@ Define component tokens beside the semantic tokens in `src/styles.scss`.
 - Avoid dead asset references in shipped CSS. Remove unused third-party placeholder imagery and do not leave non-existent local backgrounds such as `/assets/bg.jpg` in active gradients.
 - Keep hover transitions merged into a single declaration when animating multiple properties in the same selector.
 
+### Search and Discover UX rules
+
+- The authenticated toolbar search currently searches profiles, not posts. Keep the user-facing search label explicit as `Search profiles` in [`src/assets/i18n/en.json`](../../src/assets/i18n/en.json:14) unless search scope expands.
+- Search result overlays and action menus must use opaque elevated surfaces rather than translucent panels so text remains readable over feed content. Current global Material menu/autocomplete panel treatment lives in [`src/styles.scss`](../../src/styles.scss:356).
+- The Discover page card order is intentionally `Activity Feed` → `Following Lists` → `Status` in [`src/app/pages/home/home.html`](../../src/app/pages/home/home.html:40).
+- The curated Discover list order is intentionally `SpaceXpanse`, then `Nostr`, then `Bitcoin` in [`src/app/pages/home/home.ts`](../../src/app/pages/home/home.ts:59).
+
 ### Files with hardcoded colors that need token replacement
 
 Prioritize active colors and leave historical commented examples for a cleanup-only follow-up if desired.

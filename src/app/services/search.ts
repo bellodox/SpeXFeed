@@ -46,7 +46,7 @@ export class SearchService {
       this.updateResults(result);
 
       // Should we open profile or event? ...
-      if (!result) {
+      if (!result?.length && /^[0-9a-f]{64}$/i.test(searchText)) {
         this.resetSearch();
         this.router.navigate(['/p', searchText]);
       }

@@ -56,6 +56,20 @@
 
       <mat-card class="home-card">
         <mat-card-header>
+          <mat-card-title>{{ 'Home.FollowingLists' | translate }}</mat-card-title>
+          <mat-card-subtitle>{{ 'Home.FollowingListsNote' | translate }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="list-selection" *ngFor="let list of lists">
+            {{ list.name }}<br />
+            <small>{{ list.about }}</small><br />
+            <button class="full-width" [routerLink]="['/following', list.pubkeyhex]" mat-flat-button color="primary">{{ 'Home.ViewProfiles' | translate }}</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="home-card">
+        <mat-card-header>
           <mat-card-title>Status</mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -77,20 +91,6 @@
               <span>Following: {{ profileService.following.length }}</span>
             </span>
           </p>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="home-card">
-        <mat-card-header>
-          <mat-card-title>{{ 'Home.FollowingLists' | translate }}</mat-card-title>
-          <mat-card-subtitle>{{ 'Home.FollowingListsNote' | translate }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="list-selection" *ngFor="let list of lists">
-            {{ list.name }}<br />
-            <small>{{ list.about }}</small><br />
-            <button class="full-width" [routerLink]="['/following', list.pubkeyhex]" mat-flat-button color="primary">{{ 'Home.ViewProfiles' | translate }}</button>
-          </div>
         </mat-card-content>
       </mat-card>
     </div>
