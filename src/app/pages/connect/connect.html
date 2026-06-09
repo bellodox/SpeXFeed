@@ -135,6 +135,52 @@
       </div>
     </div>
 
+    <mat-card class="card rod-wallet-setup-card">
+      <mat-card-content>
+        <p class="setup-eyebrow">Desktop setup placeholder</p>
+        <h1>Configure SpeXFeed with a local ROD wallet</h1>
+        <p>
+          SpeXFeed desktop uses a local helper service for ROD name lookups, profile-name registration, updates, and relay
+          seed recovery. Keep your ROD wallet on your machine; the app talks to the helper API instead of exposing wallet
+          credentials in the browser UI.
+        </p>
+
+        <div class="setup-grid" aria-label="Local ROD wallet setup steps">
+          <section>
+            <mat-icon aria-hidden="true">account_balance_wallet</mat-icon>
+            <h2>1. Start ROD Core RPC</h2>
+            <p>
+              Run your local ROD node with RPC enabled and reachable at <code>localhost:11999</code>. Match the RPC user and
+              password to your local ROD configuration.
+            </p>
+          </section>
+          <section>
+            <mat-icon aria-hidden="true">folder_shared</mat-icon>
+            <h2>2. Load the SpeXFeed wallet</h2>
+            <p>
+              Create the app wallet once with <code>createwallet spexfeed</code>, then load it with
+              <code>loadwallet spexfeed</code> before submitting registrations or updates.
+            </p>
+          </section>
+          <section>
+            <mat-icon aria-hidden="true">settings_ethernet</mat-icon>
+            <h2>3. Configure the helper</h2>
+            <p>
+              Copy <code>server/.env.example</code> to <code>server/.env</code>, then set
+              <code>ROD_RPC_USER</code>, <code>ROD_RPC_PASSWORD</code>, <code>ROD_RPC_HOST</code>,
+              <code>ROD_RPC_PORT</code>, <code>ROD_WALLET_NAME=spexfeed</code>, and <code>SERVER_PORT=3000</code>.
+            </p>
+          </section>
+        </div>
+
+        <p class="setup-note">
+          Start the helper service before opening the desktop app. If SpeXFeed reports wallet or RPC setup errors, verify
+          that the ROD node is synced, the <code>spexfeed</code> wallet is loaded, and the helper credentials match your
+          local ROD RPC settings.
+        </p>
+      </mat-card-content>
+    </mat-card>
+
     <!-- <div class="store-banner card">
       <div class="store-content">
         <div class="store-icon">
@@ -177,6 +223,25 @@
           builders, players, and communities who want open communication around decentralized identities, projects,
           and worlds.
         </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card latest-changes-card">
+      <mat-card-content>
+        <p class="latest-changes-eyebrow">Latest changes</p>
+        <h1>ROD relay seed registry is now in progress</h1>
+        <p>
+          SpeXFeed now includes blockchain-backed relay seed lookup for relay partition recovery, with a helper API,
+          frontend lookup service, relay bootstrap merge, and a manual "Import Blockchain Seeds" action on the Relays page.
+        </p>
+        <p>
+          Helper configuration now supports ROD RPC credentials, wallet settings, server port setup, and the initial
+          <strong>sf/relays-global</strong> seed registry registration has been submitted for mining.
+        </p>
+        <a class="latest-changes-link" href="https://github.com/SpaceXpanse/SpeXFeed/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">
+          Read the full changelog
+          <span aria-hidden="true">→</span>
+        </a>
       </mat-card-content>
     </mat-card>
 

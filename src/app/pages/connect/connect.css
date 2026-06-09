@@ -220,6 +220,112 @@
   padding: 1rem 1.2rem;
 }
 
+.latest-changes-card {
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--mat-sys-primary) 24%, transparent), transparent 16rem),
+    color-mix(in srgb, var(--mat-sys-primary) 8%, var(--sf-surface-elevated));
+  border-color: color-mix(in srgb, var(--mat-sys-primary) 34%, var(--sf-border-subtle));
+}
+
+.latest-changes-eyebrow {
+  color: var(--mat-sys-primary) !important;
+  font-family: "Rajdhani", "IBM Plex Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.6rem !important;
+  text-transform: uppercase;
+}
+
+.latest-changes-card h1 {
+  margin-bottom: 1rem;
+}
+
+.latest-changes-link {
+  align-items: center;
+  color: var(--mat-sys-primary);
+  display: inline-flex;
+  font-weight: 700;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  text-decoration: none;
+}
+
+.latest-changes-link:hover {
+  color: var(--mat-sys-secondary);
+  text-decoration: underline;
+}
+
+.latest-changes-link:focus-visible {
+  outline: 3px solid var(--mat-sys-secondary);
+  outline-offset: 4px;
+}
+
+.rod-wallet-setup-card {
+  background:
+    radial-gradient(circle at 0% 100%, color-mix(in srgb, var(--mat-sys-secondary) 18%, transparent), transparent 18rem),
+    var(--sf-surface-elevated);
+}
+
+.setup-eyebrow {
+  color: var(--mat-sys-secondary) !important;
+  font-family: "Rajdhani", "IBM Plex Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.6rem !important;
+  text-transform: uppercase;
+}
+
+.setup-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 2rem 0 1.5rem;
+}
+
+.setup-grid section {
+  background: color-mix(in srgb, var(--mat-sys-secondary) 7%, var(--sf-surface-elevated));
+  border: 1px solid color-mix(in srgb, var(--mat-sys-secondary) 24%, var(--sf-border-subtle));
+  border-radius: 18px;
+  padding: 1.1rem;
+}
+
+.setup-grid mat-icon {
+  color: var(--mat-sys-secondary);
+  margin-bottom: 0.7rem;
+}
+
+.setup-grid h2 {
+  color: var(--mat-sys-on-surface);
+  font-size: 1.05rem;
+  margin: 0 0 0.6rem;
+}
+
+.setup-grid p,
+.setup-note {
+  line-height: 1.6;
+}
+
+.setup-grid code,
+.setup-note code {
+  background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+  border: 1px solid var(--sf-border-subtle);
+  border-radius: 6px;
+  color: var(--mat-sys-primary);
+  display: inline-block;
+  font-size: 0.88em;
+  padding: 0.08rem 0.35rem;
+}
+
+.setup-note {
+  background: color-mix(in srgb, var(--mat-sys-tertiary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-tertiary) 34%, var(--sf-border-subtle));
+  border-radius: 14px;
+  margin-bottom: 0 !important;
+  padding: 1rem 1.2rem;
+}
+
 .consent-card {
   margin-bottom: 2em;
 }
