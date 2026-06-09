@@ -1,23 +1,30 @@
+require('dotenv').config();
+
 // Start Angular development with: ng serve --proxy-config server/proxy.conf.json
 const express = require('express');
 const cors = require('cors');
 const { callRodRpc } = require('./rod-rpc');
 
 const app = express();
-const port = 3000;
+const PORT = process.env.SERVER_PORT || 3000;
 const pendingRequests = new Map();
 const recentNamesCache = new Map();
+const relaySeedsCache = new Map();
 
 const spexfeedNamespace = 'sf/';
+const relaySeedsPrefix = `${spexfeedNamespace}relays-`;
 const handlePattern = /^[a-z0-9]([a-z0-9-]{0,30}[a-z0-9])?$/;
+const relayScopePattern = /^[a-z0-9-]{1,50}$/;
 const lowercaseHexPublicKeyPattern = /^[0-9a-f]{64}$/;
 const maxValueSizeBytes = 2048;
 const pendingStatus = 'pending';
 const confirmedStatus = 'verified';
 const failedStatus = 'failed';
 const recentNamesCacheTtlMs = 30_000;
+const relaySeedsCacheTtlMs = 300_000;
 const defaultRecentNamesLimit = 25;
 const maxRecentNamesLimit = 100;
+const maxRelaySeedEntries = 20;
 
 app.use(
   cors({
@@ -112,6 +119,72 @@ app.get('/api/rod/name/:namespace/:handle', async (request, response) => {
     response.status(500).json({
       error: 'rpc_error',
       message: toPublicErrorMessage(error, 'Failed to look up name.'),
+    });
+  }
+});
+
+app.get('/api/rod/relay-seeds', async (request, response) => {
+  await handleRelaySeedsLookup('global', response);
+});
+
+app.get('/api/rod/relay-seeds/:scope', async (request, response) => {
+  const scope = decodeURIComponent(request.params.scope || '');
+  await handleRelaySeedsLookup(scope, response);
+});
+
+app.post('/api/rod/relay-seeds/:scope', async (request, response) => {
+  const scope = decodeURIComponent(request.params.scope || '');
+  const validationErrors = validateRelaySeedWriteRequest(request.body, scope);
+
+  if (validationErrors.length > 0) {
+    response.status(400).json({
+      status: 'invalid',
+      errors: validationErrors,
+    });
+    return;
+  }
+
+  const normalizedRelays = request.body.relays
+    .map(normalizeRelaySeedEntry)
+    .filter(Boolean)
+    .slice(0, maxRelaySeedEntries);
+  const record = {
+    type: 'sf.relays.v1',
+    version: 1,
+    updatedAt: Math.floor(Date.now() / 1000),
+    scope,
+    relays: normalizedRelays,
+    sources: ['rod'],
+  };
+  const rodName = `${relaySeedsPrefix}${scope}`;
+  const jsonValue = JSON.stringify(record);
+
+  try {
+    let operationStatus = 'registered';
+
+    try {
+      await callRodRpc('name_show', [rodName]);
+      await callRodRpc('name_update', [rodName, jsonValue]);
+      operationStatus = 'updated';
+    } catch (error) {
+      if (!isNameNotFoundError(error)) {
+        throw error;
+      }
+
+      await callRodRpc('name_register', [rodName, jsonValue]);
+    }
+
+    clearCachedRelaySeeds(scope);
+    response.json({
+      status: operationStatus,
+      scope,
+      rodName,
+      record,
+    });
+  } catch (error) {
+    response.status(500).json({
+      status: 'error',
+      message: toPublicErrorMessage(error, 'Failed to write relay seeds.'),
     });
   }
 });
@@ -301,8 +374,8 @@ app.use((error, request, response, next) => {
   });
 });
 
-const server = app.listen(port, () => {
-  console.log(`SpeXFeed ROD helper listening on http://localhost:${port}`);
+const server = app.listen(PORT, () => {
+  console.log(`SpeXFeed ROD helper listening on http://localhost:${PORT}`);
 });
 
 server.on('error', (error) => {
@@ -387,6 +460,215 @@ function validatePublicKey(nostrPubkey) {
   return [];
 }
 
+async function handleRelaySeedsLookup(scope, response) {
+  const validationErrors = validateRelayScope(scope);
+
+  if (validationErrors.length > 0) {
+    response.status(400).json({
+      status: 'invalid',
+      scope,
+      errors: validationErrors,
+    });
+    return;
+  }
+
+  const cachedResponse = getCachedRelaySeeds(scope);
+  if (cachedResponse) {
+    response.json(cachedResponse);
+    return;
+  }
+
+  const rodName = `${relaySeedsPrefix}${scope}`;
+
+  try {
+    const nameRecord = await callRodRpc('name_show', [rodName]);
+    const parsedValue = parseJsonObject(nameRecord?.value);
+    const { record, errors } = validateRelaySeedRecord(parsedValue, scope);
+
+    if (!record) {
+      response.json({
+        status: 'invalid',
+        scope,
+        errors,
+      });
+      return;
+    }
+
+    const payload = {
+      status: 'found',
+      scope,
+      record,
+    };
+
+    setCachedRelaySeeds(scope, payload);
+    response.json(payload);
+  } catch (error) {
+    if (isNameNotFoundError(error)) {
+      response.json({
+        status: 'not-found',
+        scope,
+      });
+      return;
+    }
+
+    response.status(500).json({
+      status: 'error',
+      message: toPublicErrorMessage(error, 'Failed to load relay seeds.'),
+    });
+  }
+}
+
+function validateRelayScope(scope) {
+  if (typeof scope !== 'string' || scope.length === 0) {
+    return ['Scope must be a non-empty string.'];
+  }
+
+  if (!relayScopePattern.test(scope)) {
+    return ['Scope must contain only lowercase letters, numbers, and hyphens, with a maximum length of 50 characters.'];
+  }
+
+  return [];
+}
+
+function validateRelaySeedWriteRequest(body, scope) {
+  const errors = [...validateRelayScope(scope)];
+
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return ['Request body must be a JSON object.'];
+  }
+
+  if (!Array.isArray(body.relays)) {
+    errors.push('relays must be an array.');
+    return deduplicateErrors(errors);
+  }
+
+  if (body.relays.length === 0) {
+    errors.push('relays must contain at least one relay.');
+  }
+
+  if (body.relays.length > maxRelaySeedEntries) {
+    errors.push(`relays must contain no more than ${maxRelaySeedEntries} entries.`);
+  }
+
+  body.relays.forEach((relayItem, index) => {
+    if (!relayItem || typeof relayItem !== 'object' || Array.isArray(relayItem)) {
+      errors.push(`relays[${index}] must be an object.`);
+      return;
+    }
+
+    if (!isValidRelayUrl(relayItem.url)) {
+      errors.push(`relays[${index}].url must be a valid ws:// or wss:// URL.`);
+    }
+  });
+
+  const normalizedRelays = body.relays
+    .filter((relayItem) => relayItem && typeof relayItem === 'object' && !Array.isArray(relayItem))
+    .map(normalizeRelaySeedEntry)
+    .filter(Boolean)
+    .slice(0, maxRelaySeedEntries);
+
+  if (body.relays.length > 0 && normalizedRelays.length === 0) {
+    errors.push('relays must include at least one valid ws:// or wss:// URL.');
+  }
+
+  const recordValue = JSON.stringify({
+    type: 'sf.relays.v1',
+    version: 1,
+    updatedAt: Math.floor(Date.now() / 1000),
+    scope,
+    relays: normalizedRelays,
+    sources: ['rod'],
+  });
+
+  errors.push(...validateValueJson(recordValue));
+
+  return deduplicateErrors(errors);
+}
+
+function validateRelaySeedRecord(parsedValue, expectedScope) {
+  if (!parsedValue) {
+    return {
+      record: null,
+      errors: ['Record value must be a valid JSON object.'],
+    };
+  }
+
+  const errors = [];
+
+  if (parsedValue.type !== 'sf.relays.v1') {
+    errors.push('Record type must be sf.relays.v1.');
+  }
+
+  if (!Number.isInteger(parsedValue.version) || parsedValue.version <= 0) {
+    errors.push('Record version must be a positive integer.');
+  }
+
+  if (!Array.isArray(parsedValue.relays) || parsedValue.relays.length === 0) {
+    errors.push('Record relays must be a non-empty array.');
+  }
+
+  const normalizedRelays = Array.isArray(parsedValue.relays)
+    ? parsedValue.relays
+        .filter((relayItem) => relayItem && typeof relayItem === 'object' && !Array.isArray(relayItem))
+        .map(normalizeRelaySeedEntry)
+        .filter(Boolean)
+        .slice(0, maxRelaySeedEntries)
+    : [];
+
+  if (Array.isArray(parsedValue.relays) && normalizedRelays.length === 0) {
+    errors.push('Record relays must include at least one valid ws:// or wss:// URL.');
+  }
+
+  if (errors.length > 0) {
+    return {
+      record: null,
+      errors: deduplicateErrors(errors),
+    };
+  }
+
+  return {
+    record: {
+      type: parsedValue.type,
+      version: parsedValue.version,
+      updatedAt: Number.isInteger(parsedValue.updatedAt) ? parsedValue.updatedAt : null,
+      scope: typeof parsedValue.scope === 'string' ? parsedValue.scope : expectedScope,
+      relays: normalizedRelays,
+      sources: Array.isArray(parsedValue.sources)
+        ? parsedValue.sources.filter((source) => typeof source === 'string')
+        : [],
+      signature: typeof parsedValue.signature === 'string' ? parsedValue.signature : null,
+    },
+    errors: [],
+  };
+}
+
+function normalizeRelaySeedEntry(relayItem) {
+  if (!isValidRelayUrl(relayItem.url)) {
+    return null;
+  }
+
+  return {
+    url: relayItem.url,
+    role: typeof relayItem.role === 'string' ? relayItem.role : null,
+    read: typeof relayItem.read === 'boolean' ? relayItem.read : false,
+    write: typeof relayItem.write === 'boolean' ? relayItem.write : false,
+    priority: Number.isFinite(relayItem.priority) ? relayItem.priority : null,
+  };
+}
+
+function isValidRelayUrl(value) {
+  if (typeof value !== 'string' || (!value.startsWith('wss://') && !value.startsWith('ws://'))) {
+    return false;
+  }
+
+  try {
+    const parsedUrl = new URL(value);
+    return parsedUrl.protocol === 'wss:' || parsedUrl.protocol === 'ws:';
+  } catch {
+    return false;
+  }
+}
+
 function validateValueJson(value) {
   if (typeof value !== 'string') {
     return ['value must be a JSON string.'];
@@ -462,6 +744,32 @@ function setCachedRecentNames(cacheKey, payload) {
     payload,
     expiresAt: Date.now() + recentNamesCacheTtlMs,
   });
+}
+
+function getCachedRelaySeeds(scope) {
+  const cachedEntry = relaySeedsCache.get(scope);
+
+  if (!cachedEntry) {
+    return null;
+  }
+
+  if (cachedEntry.expiresAt <= Date.now()) {
+    relaySeedsCache.delete(scope);
+    return null;
+  }
+
+  return cachedEntry.payload;
+}
+
+function setCachedRelaySeeds(scope, payload) {
+  relaySeedsCache.set(scope, {
+    payload,
+    expiresAt: Date.now() + relaySeedsCacheTtlMs,
+  });
+}
+
+function clearCachedRelaySeeds(scope) {
+  relaySeedsCache.delete(scope);
 }
 
 function toRecentNameItem(nameRecord) {

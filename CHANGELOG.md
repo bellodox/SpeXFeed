@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- ROD blockchain relay seed registry for relay partition recovery
+  - Backend: `GET /api/rod/relay-seeds/:scope` helper endpoint with `sf.relays.v1` schema validation and 5-minute caching
+  - Frontend: `RelaySeedLookupService` for fetching blockchain-backed relay seeds
+  - Bootstrap merge: `RelayService.initialize()` now augments local/extension/default relays with blockchain seed relays
+  - UI: "Import Blockchain Seeds" button on Relays page for manual recovery
+  - Documentation: [`docs/maintainer-wiki/concept-relay-seed-registry.md`](docs/maintainer-wiki/concept-relay-seed-registry.md) design specification
+  - Configuration: `.env` support for ROD RPC credentials, wallet name, wallet passphrase, and helper server port
+  - Configuration: [`server/.env.example`](server/.env.example) added for helper environment setup
+  - Operations: initial `sf/relays-global` seed registry `name_register` submitted and pending mining with txid `19a06cf460dfaf35f3e22efc69e17755f7adb23ede03ea9da5473163d870c17d`
+
 ## 2026-06-09 - Initial SpeXFeed alpha shipment
 
 ### Added

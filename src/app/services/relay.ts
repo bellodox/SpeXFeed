@@ -20,6 +20,7 @@ import { BadgeService } from './badge';
 import { ZapUiService } from './zap-ui';
 import { StateService } from './state';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RelaySeedLookupService, RelaySeedEntry } from './relay-seed-lookup';
 
 @Injectable({
   providedIn: 'root',
@@ -61,7 +62,8 @@ export class RelayService {
     private appState: ApplicationState,
     private zapUi: ZapUiService,
     private stateService: StateService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private relaySeedLookup: RelaySeedLookupService
   ) {
     // Whenever the visibility becomes visible, run connect to ensure we're connected to the relays.
     this.appState.visibility$.subscribe((visible) => {
@@ -933,6 +935,34 @@ export class RelayService {
       await this.appendRelays(relays);
     }
 
+    // Augment relay list with blockchain seed relays (non-blocking on failure).
+    await this.mergeBlockchainSeeds();
+
     this.createRelayWorkers();
+  }
+
+  /** Fetches blockchain relay seeds and merges new ones into the relay list. */
+  async mergeBlockchainSeeds(): Promise<void> {
+    try {
+      const response = await this.relaySeedLookup.fetchSeeds('global');
+
+      if (response.status !== 'found' || !response.record?.relays) {
+        return;
+      }
+
+      const existingUrls = new Set(this.items.map((relay) => relay.url));
+      const newSeeds = response.record.relays.filter((seed: RelaySeedEntry) => !existingUrls.has(seed.url));
+
+      for (const seed of newSeeds) {
+        await this.addRelay(seed.url, seed.read !== false, seed.write !== false);
+      }
+
+      if (newSeeds.length > 0) {
+        this.logger.info(`Merged ${newSeeds.length} blockchain seed relay(s).`);
+      }
+    } catch (err) {
+      // Non-fatal: blockchain seeds are an augmentation, not a hard dependency.
+      this.logger.warn('Failed to fetch blockchain relay seeds:', err);
+    }
   }
 }

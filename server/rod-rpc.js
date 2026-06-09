@@ -1,10 +1,12 @@
+require('dotenv').config();
+
 const http = require('http');
 
-const RPC_HOST = '127.0.0.1';
-const RPC_PORT = 11999;
-const RPC_USERNAME = 'xuser1';
-const RPC_PASSWORD = 'xpass1';
-const RPC_WALLET = 'spexfeed';
+const RPC_HOST = process.env.ROD_RPC_HOST || 'localhost';
+const RPC_PORT = process.env.ROD_RPC_PORT || '11999';
+const RPC_USERNAME = process.env.ROD_RPC_USER || 'xuser1';
+const RPC_PASSWORD = process.env.ROD_RPC_PASSWORD || 'xpass1';
+const RPC_WALLET = process.env.ROD_WALLET_NAME || 'spexfeed';
 const RPC_PATH = `/wallet/${RPC_WALLET}`;
 const REQUEST_TIMEOUT_MS = 10000;
 

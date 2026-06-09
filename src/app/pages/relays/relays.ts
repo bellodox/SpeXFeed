@@ -125,6 +125,10 @@ export class RelaysManagementComponent {
     await this.relayService.appendRelays(relays);
   }
 
+  async importBlockchainSeeds() {
+    await this.relayService.mergeBlockchainSeeds();
+  }
+
   ngOnInit() {
     this.appState.updateTitle('Relays');
     this.appState.showBackButton = false;

@@ -9,6 +9,7 @@
 - [Design system](design-system.md) — SpaceXpanse SpeXFeed visual rebrand palette, typography, tokens, and implementation notes
 - [Concept: Architecture overview](concept-architecture-overview.md) — High-level application structure and responsibilities
 - [Concept: Nostr relay and event flow](concept-nostr-relay-event-flow.md) — Relay, worker, storage, and event-processing flow
+- [Concept: ROD relay seed registry](concept-relay-seed-registry.md) — Blockchain-backed relay bootstrap for partition recovery
 - [ROD Name and Nostr Profile Binding](ROD-NAME-PROFILE-BINDING.md) — How `sf/<handle>` records connect ROD names to Nostr profiles in MVP 1.1
 - [SF Profile Schema v1](SF-PROFILE-SCHEMA-v1.md) — Compact `sf.profile` record contract and validation rules
 - [Name Registration and Update Flow](NAME-REGISTRATION-FLOW.md) — Alpha tester flow for `/register-name` and `/settings/name`
