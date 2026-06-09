@@ -3,6 +3,7 @@
 - Define and implement proof-of-key-ownership for [`src/app/services/spexfeed-name-registration.ts`](src/app/services/spexfeed-name-registration.ts:145) so registration/update submission can move beyond controlled alpha.
 - Resolve the pre-existing Angular/Karma DOM-global typing issue blocking full [`npm run test -- --watch=false --browsers=ChromeHeadless`](package.json:11) execution.
 - Automate the mutual Nostr metadata back-link for flows beyond the current create-account path so successful SpeXFeed name registration can also publish the claim into user profile metadata for existing profiles and standalone registration/update flows.
+- Document the exact release/retention policy for helper-side recent-name discovery caching and any future pagination/indexing behavior once it is stabilized.
 - Extend the verification state machine to expose partial/basic verification distinctly from strong-verified, mismatch, and not-found states.
 - Add dedicated UX for removing or unlinking a SpeXFeed name from a ROD record instead of requiring update-only key rotation.
 - Expand registration UX to support optional profile metadata fields currently available only on the update page.

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -16,7 +16,7 @@ import { RecentRodNameItem, RecentRodNamesService } from '../../services/recent-
   templateUrl: './discover-profiles.html',
   styleUrls: ['./discover-profiles.css'],
 })
-export class DiscoverProfilesComponent {
+export class DiscoverProfilesComponent implements OnInit {
   recentNames: RecentRodNameItem[] = [];
   isLoading = true;
   hasError = false;

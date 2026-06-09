@@ -13,12 +13,18 @@ This page documents the alpha tester flow for registering and updating SpeXFeed 
 
 ## Alpha routes
 
-The application exposes two documented routes for testers:
+The application exposes two primary write/update routes for testers:
 
 - `/register-name` — registration flow in `src/app/app.routes.ts`
 - `/settings/name` — profile-record update flow in `src/app/app.routes.ts`
 
 The settings page links to both routes from the SpeXFeed Name card in `src/app/pages/settings/settings.html`.
+
+Additional shipped alpha routes that support the broader tester journey are documented in the release overview:
+
+- `/connect/create` — optional create-account SpeXFeed Name entry point
+- `/n/:handle` — profile-by-name resolution target
+- `/discover/profiles` — recent ROD profile discovery surface
 
 ## Registration flow for testers
 
@@ -35,6 +41,8 @@ In the implemented flow:
 5. when the helper accepts the request, the create flow shows a visible pending confirmation spinner before the verified state resolves
 
 This behavior is implemented in [`CreateProfileComponent`](../../src/app/pages/connect/create/create.ts:35), the optional SpeXFeed panel in [`create.html`](../../src/app/pages/connect/create/create.html), and the related styles in [`create.css`](../../src/app/pages/connect/create/create.css).
+
+After successful registration during account creation, the local draft/profile state also preserves SpeXFeed naming metadata for later Settings/profile use instead of discarding it at the end of onboarding.
 
 ### Entry point
 
@@ -178,6 +186,10 @@ Important meanings:
 - `pending` may mean helper confirmation is still pending **or** that confirmation was reported but the updated record has not yet been observed through lookup.
 - `verified` means the updated record was confirmed and detected with matching linked key and fresh timestamp.
 
+### Current metadata-publishing limitation
+
+The shipped alpha preserves SpeXFeed naming metadata in local profile state after create-account registration, but it does **not** automatically publish the reciprocal Nostr metadata claim for every registration/update path. Maintainers should describe that reciprocal publish step as incomplete automation rather than as guaranteed behavior.
+
 ### Key-mismatch protection
 
 When the loaded `sf.profile` record points to a different Nostr public key than the currently authenticated user, the update page intentionally blocks submission. The page still loads the existing record and JSON preview, but reports a mismatch state so maintainers/testers do not accidentally overwrite another linked key.
@@ -194,7 +206,8 @@ This protection is implemented in `src/app/pages/update-name/update-name.ts` and
 6. Submit the backend-assisted registration request.
 7. Observe `pending` with a visible loading cue until confirmation resolves.
 8. Return to the profile/settings surfaces to confirm the name verifies as expected.
-9. Use `/settings/name` to update optional metadata or rotate the linked Nostr public key if needed.
+9. Optionally open `/discover/profiles` or resolve `/n/<handle>` to confirm the shipped alpha discovery/navigation surfaces can find the registered profile.
+10. Use `/settings/name` to update optional metadata or rotate the linked Nostr public key if needed.
 
 ## Failure and ambiguity cases testers should expect
 
@@ -203,6 +216,7 @@ This protection is implemented in `src/app/pages/update-name/update-name.ts` and
 - Lookup unavailable because the helper or backend endpoint is down.
 - Invalid record or wrong type because the ROD name exists but does not contain a valid `sf.profile` value.
 - Verified registration request without immediate record detection, producing a temporary `pending` experience after update.
+- Helper lookup failure caused by unavailable ROD RPC or a missing/unloaded `spexfeed` wallet in the local helper environment.
 
 ## Important non-claims
 
@@ -213,6 +227,7 @@ This alpha flow does **not** imply:
 - direct raw RPC from the client
 - production-ready registration infrastructure
 - SpeXID or universal login support
+- automatic reciprocal Nostr metadata publication for every successful name registration/update path
 
 ## Validation commands for this documentation set
 

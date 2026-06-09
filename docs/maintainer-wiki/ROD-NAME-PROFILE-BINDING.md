@@ -12,6 +12,7 @@ Implementation evidence:
 - Lookup normalization and record parsing live in `src/app/services/spexfeed-name-lookup.ts`.
 - Verification of profile claims against ROD records lives in `src/app/services/spexfeed-name-verification.ts`.
 - Profile and settings surfaces use the badge and verification result in `src/app/shared/spexfeed-name-badge/` and the settings/profile integrations.
+- Helper-backed recent-profile discovery and profile-by-name navigation complete the initial alpha browsing path around registered names.
 
 ## Product framing
 
@@ -101,6 +102,8 @@ The MVP plan describes a “basic verified” or “partially linked” concept.
 
 - Settings surface: the SpeXFeed Name card in `src/app/pages/settings/settings.html`.
 - Profile surfaces: the reusable badge component in `src/app/shared/spexfeed-name-badge/` and the profile integrations referenced by the Sprint 3 implementation summary.
+- Create-account surface: the optional SpeXFeed panel on [`/connect/create`](../../src/app/pages/connect/create/create.html:111), which previews the canonical handle and generated Nostr key before registration.
+- Discovery surfaces: recent profiles on `/discover/profiles` and handle resolution through `/n/:handle`.
 
 The badge component chooses:
 
@@ -116,6 +119,7 @@ This behavior is implemented in `src/app/shared/spexfeed-name-badge/spexfeed-nam
 - The default lookup adapter calls a backend HTTP endpoint rather than raw wallet RPC from the browser in `src/app/services/spexfeed-name-lookup.ts`.
 - The registration/update adapter also assumes a backend/helper flow in `src/app/services/spexfeed-name-registration.ts`.
 - The MVP plan allows controlled alpha helper services, and the implementation follows that narrower model rather than a production-ready browser wallet flow.
+- Local profile metadata persistence after create-account registration does not by itself guarantee that a reciprocal Nostr metadata claim has been published to relays.
 
 ## Tester takeaway
 

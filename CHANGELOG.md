@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## 2026-06-09 - Initial SpeXFeed alpha shipment
+
+### Added
+
+- Initial SpeXFeed alpha release documentation in the maintainer wiki, centered on [`docs/maintainer-wiki/MVP-1.1-README.md`](docs/maintainer-wiki/MVP-1.1-README.md), [`docs/maintainer-wiki/NAME-REGISTRATION-FLOW.md`](docs/maintainer-wiki/NAME-REGISTRATION-FLOW.md), and [`docs/maintainer-wiki/ROD-NAME-PROFILE-BINDING.md`](docs/maintainer-wiki/ROD-NAME-PROFILE-BINDING.md)
+
+### Release scope
+
+- ROD helper backend service (`server/`) for browser-safe status, lookup, registration/update request handling, and recent `sf.profile` discovery
+- SpeXFeed Name registration/update flow plus optional account-creation SpeXFeed step on [`/connect/create`](src/app/pages/connect/create/create.html:111)
+- Profile-by-name navigation, `sf/<handle>` search routing, and Discover ROD Profiles browsing
+- Backward-compatible local storage migration into SpeXFeed namespaces and SpaceXpanse visual rebrand across shipped user-facing surfaces
+- Authenticated alpha UX fixes required for guided testing, including the working `/update-name` route, repaired Settings controls, and stronger dark-surface readability
+
+### Known alpha limitations
+
+- Registration/update still depends on helper/backend infrastructure and wallet-scoped RPC access through the loaded `spexfeed` wallet path
+- Proof-of-key-ownership for registration/update requests remains unfinished and is required before any production claim
+- Partial/basic verification is still a plan concept rather than a separately emitted verification state
+- Reciprocal Nostr metadata publication is not fully automated across all registration/update paths
+
 ### Added
 
 - [`docs/maintainer-wiki/design-system.md`](docs/maintainer-wiki/design-system.md) — Complete SpaceXpanse brand design system specification
