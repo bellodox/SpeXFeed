@@ -63,6 +63,7 @@
         </section>
 
         <section *ngIf="state.status === 'pending'" class="pending-panel">
+          <mat-spinner diameter="32"></mat-spinner>
           <h2>Pending confirmation</h2>
           <p>Request {{ state.requestId }} was submitted to the supported ROD helper flow. SpeXFeed will show verified after confirmation.</p>
         </section>

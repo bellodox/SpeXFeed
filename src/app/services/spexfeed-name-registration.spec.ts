@@ -41,6 +41,16 @@ class MockRegistrationAdapter implements SpeXFeedNameRegistrationAdapter {
   }
 }
 
+class FailingRegistrationAdapter implements SpeXFeedNameRegistrationAdapter {
+  async submitRequest() {
+    throw new Error('ROD RPC wallet `spexfeed` is not loaded.');
+  }
+
+  async getRequestStatus(requestId: string) {
+    return { requestId, status: 'failed' as const, message: 'Failed.' };
+  }
+}
+
 describe('SpeXFeed Name Sprint 4 registration', () => {
   it('builds a browser-safe registration request without wallet credentials', () => {
     const request = buildSpeXFeedNameRegistrationRequest('Alice', PROFILE_PUBKEY.toUpperCase(), 123);
@@ -92,5 +102,14 @@ describe('SpeXFeed Name Sprint 4 registration', () => {
     expect(verifiedState.status).toBe('verified');
     expect(verifiedState.message).toBe('Confirmed.');
   });
-});
 
+  it('maps helper wallet failures into actionable setup guidance', async () => {
+    const service = new SpeXFeedNameRegistrationService(new SpeXFeedNameLookupService(new MockLookupAdapter(false) as never), new FailingRegistrationAdapter() as never);
+
+    const failedState = await service.submitRegistration('alice', PROFILE_PUBKEY);
+
+    expect(failedState.status).toBe('failed');
+    expect(failedState.message).toContain('createwallet spexfeed');
+    expect(failedState.message).toContain('loadwallet spexfeed');
+  });
+});

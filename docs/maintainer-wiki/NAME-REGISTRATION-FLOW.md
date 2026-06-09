@@ -5,6 +5,7 @@
 This page documents the alpha tester flow for registering and updating SpeXFeed Names in MVP 1.1. The underlying product plan is Sprint 4 and Sprint 5 from [docs/SpeXFeed MVP 1.1 Plan.pdf](../SpeXFeed%20MVP%201.1%20Plan.pdf), while the implemented browser flow is defined by:
 
 - `src/app/pages/register-name/register-name.html`
+- `src/app/pages/connect/create/create.html`
 - `src/app/pages/update-name/update-name.html`
 - `src/app/services/spexfeed-name-registration.ts`
 - `src/app/services/spexfeed-name-profile-update.ts`
@@ -20,6 +21,20 @@ The application exposes two documented routes for testers:
 The settings page links to both routes from the SpeXFeed Name card in `src/app/pages/settings/settings.html`.
 
 ## Registration flow for testers
+
+### Create-account entry point
+
+The authenticated registration page is still available at `/register-name`, but the account-creation flow on [`/connect/create`](../../src/app/pages/connect/create/create.html) now also exposes an optional SpeXFeed Name step.
+
+In the implemented flow:
+
+1. the nickname entered during account creation is reused as the candidate handle
+2. the UI shows the canonical `sf/<handle>` preview
+3. the user can explicitly check availability
+4. the user can explicitly submit registration through the local helper flow after acknowledging the same public-link and not-SpeXID warnings
+5. when the helper accepts the request, the create flow shows a visible pending confirmation spinner before the verified state resolves
+
+This behavior is implemented in [`CreateProfileComponent`](../../src/app/pages/connect/create/create.ts:35), the optional SpeXFeed panel in [`create.html`](../../src/app/pages/connect/create/create.html), and the related styles in [`create.css`](../../src/app/pages/connect/create/create.css).
 
 ### Entry point
 
@@ -99,7 +114,7 @@ The currently implemented browser flow expects the helper/backend API to satisfy
 
 ### Local helper/RPC compatibility notes
 
-The current local helper implementation assumes a wallet-scoped ROD RPC path rather than the node root path. In the validated workspace setup, the helper uses the loaded `VoidRunner` wallet path in `server/rod-rpc.js` so write methods such as `name_register` and `name_update` do not fail with a "wallet file not specified" RPC error.
+The current local helper implementation assumes a wallet-scoped ROD RPC path rather than the node root path. In the current validated workspace setup, the helper targets the loaded `spexfeed` wallet path in [`server/rod-rpc.js`](../../server/rod-rpc.js:7) so write methods such as `name_register` and `name_update` do not fail with a wallet-selection RPC error.
 
 This means local maintainers must keep three layers aligned:
 
@@ -108,6 +123,8 @@ This means local maintainers must keep three layers aligned:
 3. Wallet-scoped RPC access in `server/rod-rpc.js`.
 
 Maintainers should treat HTML responses from these routes as a proxy or helper misconfiguration, not as a valid application-level failure case. The implemented adapters now surface a controlled backend/API configuration error instead of leaking raw JSON parse failures.
+
+The helper now also surfaces clearer local-setup failures for testers when the ROD RPC node is unavailable or the `spexfeed` wallet is missing/unloaded. Backend-side classification for those cases is implemented by [`isWalletNotLoadedError()`](../../server/index.js:507) and [`isRpcUnavailableError()`](../../server/index.js:517), while the frontend maps them into actionable setup guidance in [`mapHelperFlowErrorMessage()`](../../src/app/services/spexfeed-name-registration.ts:327).
 
 ### Local development and proxy note
 
@@ -171,11 +188,11 @@ This protection is implemented in `src/app/pages/update-name/update-name.ts` and
 
 1. Go to `/settings`.
 2. Review the SpeXFeed Name status card.
-3. Open `/register-name` if no name is registered yet.
+3. Either open `/register-name` or use the optional SpeXFeed panel during `/connect/create`.
 4. Check handle availability.
 5. Acknowledge the public-link and not-SpeXID warnings.
 6. Submit the backend-assisted registration request.
-7. Observe `pending` until confirmation resolves.
+7. Observe `pending` with a visible loading cue until confirmation resolves.
 8. Return to the profile/settings surfaces to confirm the name verifies as expected.
 9. Use `/settings/name` to update optional metadata or rotate the linked Nostr public key if needed.
 

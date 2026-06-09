@@ -6,7 +6,7 @@ import {
   validateSpeXFeedHandle,
   validateSpeXFeedProfileRecord,
 } from './spexfeed-name';
-import { readJsonResponse } from './spexfeed-name-http-utils';
+import { readErrorResponseMessage, readJsonResponse } from './spexfeed-name-http-utils';
 
 export type SpeXFeedNameLookupStatus =
   | 'available'
@@ -167,7 +167,8 @@ export class SpeXFeedHttpNameLookupAdapter implements SpeXFeedNameLookupAdapter 
     }
 
     if (!response.ok) {
-      throw new Error(`Lookup failed with HTTP ${response.status}.`);
+      const errorMessage = await readErrorResponseMessage(response, `Lookup failed with HTTP ${response.status}.`);
+      throw new Error(errorMessage);
     }
 
     return await readJsonResponse<SpeXFeedNameLookupResponse>(response, 'Name lookup');

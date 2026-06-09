@@ -23,9 +23,10 @@
           <mat-form-field class="input-full-width">
             <mat-icon matPrefix>alternate_email</mat-icon>
             <mat-label>{{ 'Create.Nickname' | translate }}</mat-label>
-            <input matInput type="text" [(ngModel)]="profile.name" />
+            <input matInput type="text" [(ngModel)]="profile.name" (ngModelChange)="handleNicknameChange()" />
           </mat-form-field>
         </p>
+        <p class="description">This nickname can also be used as your SpeXFeed ROD handle during account creation.</p>
         <p>
           <mat-form-field class="input-full-width">
             <mat-icon matPrefix>help_outline</mat-icon>
@@ -106,6 +107,54 @@
 
           <br />
         </form>
+
+        <section class="spexfeed-name-panel" *ngIf="nicknameInput.trim() as nickname">
+          <h2>Optional SpeXFeed Name</h2>
+          <p class="description left">Candidate handle: <strong>{{ normalizedRodName }}</strong></p>
+          <p class="description left">Check availability first, then register explicitly through the local helper if you want this account linked to a ROD name now.</p>
+
+          <div class="connect-action left">
+            <button class="start-button" type="button" mat-stroked-button color="primary" [disabled]="!canCheckSpeXFeedName" (click)="checkSpeXFeedName()">Check SpeXFeed Name</button>
+          </div>
+
+          <div class="status-panel" [class.positive]="spexfeedNameState.status === 'available' || spexfeedNameState.status === 'verified'" [class.warning]="spexfeedNameState.status === 'unavailable' || spexfeedNameState.status === 'invalid'" [class.error]="spexfeedNameState.status === 'failed'" role="status" aria-live="polite">
+            <span>{{ spexfeedNameState.message || 'You can skip this now and register the same handle later from Settings.' }}</span>
+          </div>
+
+          <ul *ngIf="spexfeedNameState.errors.length > 0" class="error-list">
+            <li *ngFor="let error of spexfeedNameState.errors">{{ error }}</li>
+          </ul>
+
+          <section *ngIf="spexfeedNameState.status === 'available'" class="confirmation-panel" aria-label="SpeXFeed registration confirmation">
+            <label class="check-row">
+              <input type="checkbox" [(ngModel)]="acceptedPublicLinkWarning" name="acceptedPublicLinkWarning" />
+              <span>I understand this creates a public link between {{ spexfeedNameState.rodName }} and my Nostr public key.</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" [(ngModel)]="acceptedNotSpexIdWarning" name="acceptedNotSpexIdWarning" />
+              <span>I understand SpeXFeed Names are handles only, not SpeXID, KYC, legal identity, or proof-of-personhood.</span>
+            </label>
+            <button type="button" mat-flat-button color="primary" [disabled]="!canRegisterSpeXFeedName" (click)="registerSpeXFeedName()">Register SpeXFeed Name</button>
+          </section>
+
+          <section *ngIf="spexfeedNameState.status === 'pending'" class="pending-panel">
+            <mat-spinner diameter="32"></mat-spinner>
+            <p>Request {{ spexfeedNameState.requestId }} was submitted. SpeXFeed will mark the claim verified after the helper confirms it.</p>
+          </section>
+
+          <section *ngIf="spexfeedNameState.status === 'verified'" class="verified-panel">
+            <p>{{ spexfeedNameState.rodName }} is confirmed and will be saved into this profile as <code>spexfeed_name</code>.</p>
+          </section>
+
+          <section *ngIf="hasHelperSetupInstructions" class="helper-panel">
+            <h3>Local helper requirements</h3>
+            <ol>
+              <li>Start the local ROD RPC node so it is reachable on <code>localhost:11999</code>.</li>
+              <li>Create the helper wallet once with <code>createwallet spexfeed</code>.</li>
+              <li>Load the wallet with <code>loadwallet spexfeed</code>.</li>
+            </ol>
+          </section>
+        </section>
 
         <p class="dimmed">From your secret recovery phrase, your public key and private key are derived. Some Nostr clients require the private key to be imported.</p>
 

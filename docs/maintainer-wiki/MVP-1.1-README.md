@@ -15,6 +15,7 @@ Implemented Sprint 1 through Sprint 5 functionality, documented here for Sprint 
 - profile verification state machine in `src/app/services/spexfeed-name-verification.ts`
 - reusable badge surface in `src/app/shared/spexfeed-name-badge/`
 - registration flow in `src/app/pages/register-name/` and `src/app/services/spexfeed-name-registration.ts`
+- optional create-account SpeXFeed registration flow in [`CreateProfileComponent`](../../src/app/pages/connect/create/create.ts:35)
 - update flow in `src/app/pages/update-name/` and `src/app/services/spexfeed-name-profile-update.ts`
 - routes `/register-name` and `/settings/name` in `src/app/app.routes.ts`
 
@@ -62,10 +63,10 @@ Implementation references:
 ## Alpha tester flow
 
 1. Open `/settings` and review the SpeXFeed Name card.
-2. Open `/register-name` to check whether a handle is available.
+2. Either open `/register-name` or use the optional SpeXFeed step during `/connect/create` to check whether a handle is available.
 3. Read and accept the public-link and not-SpeXID warnings.
 4. Submit the backend-assisted registration request.
-5. Wait through `pending` until the helper flow confirms the request.
+5. Wait through `pending` until the helper flow confirms the request; the create-account flow now shows a visible loading spinner during that wait.
 6. Re-check the settings/profile surfaces for verification.
 7. Open `/settings/name` to edit public metadata or rotate the linked Nostr key.
 
@@ -90,7 +91,7 @@ Current browser-facing adapter assumptions:
 
 Those integrations should be documented as alpha dependencies, not as production-hardened infrastructure. SpeXFeed does not claim browser custody of ROD private keys.
 
-The current validated local helper also depends on wallet-scoped RPC access for write methods. In this workspace, helper-side registration/update calls are routed through a loaded wallet path in `server/rod-rpc.js` rather than the bare RPC root path.
+The current validated local helper also depends on wallet-scoped RPC access for write methods. In this workspace, helper-side registration/update calls are routed through the loaded `spexfeed` wallet path in [`server/rod-rpc.js`](../../server/rod-rpc.js:7) rather than the bare RPC root path.
 
 ## Related documentation
 

@@ -13,12 +13,14 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateService } from '@ngx-translate/core'; //Added this for the transalation i18n
 import { ProfileService } from 'src/app/services/profile';
 import { AuthenticationService } from 'src/app/services/authentication';
 import { ThemeService } from 'src/app/services/theme';
 import { SecurityService } from 'src/app/services/security';
 import { migratedSetItem } from 'src/app/services/storage-migration';
+import { SpeXFeedNameRegistrationService, SpeXFeedNameRegistrationState } from 'src/app/services/spexfeed-name-registration';
 
 @Component({
   selector: 'app-create',
@@ -28,6 +30,7 @@ import { migratedSetItem } from 'src/app/services/storage-migration';
     ClipboardModule,
     CommonModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     RouterModule,
     MatCardModule, FormsModule, MatInputModule, TranslateModule]
 })
@@ -41,6 +44,9 @@ export class CreateProfileComponent {
   profile: any = {};
   step = 1;
   mnemonic = '';
+  acceptedPublicLinkWarning = false;
+  acceptedNotSpexIdWarning = false;
+  spexfeedNameState: SpeXFeedNameRegistrationState = { status: 'idle', input: '', errors: [] };
 
   constructor(
     private translate: TranslateService, // Add TranslateService
@@ -48,6 +54,7 @@ export class CreateProfileComponent {
     private dataService: DataService,
     private profileService: ProfileService,
     private authService: AuthenticationService,
+    private spexfeedNameRegistration: SpeXFeedNameRegistrationService,
     public theme: ThemeService,
     private router: Router,
     private security: SecurityService
@@ -104,6 +111,10 @@ export class CreateProfileComponent {
 
         this.profile.npub = this.publicKey;
         this.profile.pubkey = this.publicKeyHex;
+
+        if (this.spexfeedNameState.status === 'verified' && this.spexfeedNameState.handle) {
+          this.applySpeXFeedNameClaim(this.spexfeedNameState.handle);
+        }
 
         // Create and sign the profile event.
         const profileContent = this.utilities.reduceProfile(this.profile!);
@@ -165,5 +176,74 @@ export class CreateProfileComponent {
     } catch (err: any) {
       this.error = err.message;
     }
+  }
+
+  get nicknameInput(): string {
+    return typeof this.profile?.name === 'string' ? this.profile.name : '';
+  }
+
+  get normalizedRodName(): string {
+    const normalizedHandle = this.nicknameInput.trim().toLowerCase().replace(/^sf\//, '');
+    return normalizedHandle ? `sf/${normalizedHandle}` : 'sf/<handle>';
+  }
+
+  get canCheckSpeXFeedName(): boolean {
+    return this.nicknameInput.trim().length > 0 && this.publicKeyHex.length === 64 && !this.isSpeXFeedNameProcessing;
+  }
+
+  get canRegisterSpeXFeedName(): boolean {
+    return this.spexfeedNameState.status === 'available' && this.acceptedPublicLinkWarning && this.acceptedNotSpexIdWarning && !this.isSpeXFeedNameProcessing;
+  }
+
+  get isSpeXFeedNameProcessing(): boolean {
+    return this.spexfeedNameState.status === 'checking' || this.spexfeedNameState.status === 'submitting' || this.spexfeedNameState.status === 'pending';
+  }
+
+  get hasHelperSetupInstructions(): boolean {
+    if (this.spexfeedNameState.status !== 'failed') {
+      return false;
+    }
+
+    const combinedMessage = [this.spexfeedNameState.message, ...this.spexfeedNameState.errors].join(' ').toLowerCase();
+    return combinedMessage.includes('createwallet spexfeed') || combinedMessage.includes('loadwallet spexfeed') || combinedMessage.includes('localhost:11999');
+  }
+
+  handleNicknameChange(): void {
+    this.acceptedPublicLinkWarning = false;
+    this.acceptedNotSpexIdWarning = false;
+    this.spexfeedNameState = { status: 'idle', input: '', errors: [] };
+  }
+
+  async checkSpeXFeedName(): Promise<void> {
+    if (!this.canCheckSpeXFeedName) {
+      return;
+    }
+
+    this.spexfeedNameState = await this.spexfeedNameRegistration.checkName(this.nicknameInput);
+  }
+
+  async registerSpeXFeedName(): Promise<void> {
+    if (!this.canRegisterSpeXFeedName || !this.spexfeedNameState.handle || !this.publicKeyHex) {
+      return;
+    }
+
+    this.spexfeedNameState = await this.spexfeedNameRegistration.submitRegistration(this.spexfeedNameState.handle, this.publicKeyHex);
+
+    if (this.spexfeedNameState.status === 'pending' && this.spexfeedNameState.requestId) {
+      this.spexfeedNameState = await this.spexfeedNameRegistration.trackConfirmation(this.spexfeedNameState.requestId);
+    }
+
+    if (this.spexfeedNameState.status === 'verified' && this.spexfeedNameState.handle) {
+      this.applySpeXFeedNameClaim(this.spexfeedNameState.handle);
+    }
+  }
+
+  private applySpeXFeedNameClaim(handle: string): void {
+    const normalizedHandle = handle.trim().toLowerCase();
+    this.profile.spexfeed_name = normalizedHandle;
+    this.profile.spexfeed = {
+      ...(this.profile.spexfeed ?? {}),
+      name: normalizedHandle,
+    };
   }
 }

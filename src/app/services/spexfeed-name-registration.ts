@@ -1,7 +1,7 @@
 import { Inject, inject, Injectable, InjectionToken } from '@angular/core';
 import { canonicalizeNostrPublicKey, SpeXFeedProfileRecordV1, validateSpeXFeedProfileRecord } from './spexfeed-name';
 import { normalizeSpeXFeedLookupName, SpeXFeedNameLookupResult, SpeXFeedNameLookupService } from './spexfeed-name-lookup';
-import { readJsonResponse } from './spexfeed-name-http-utils';
+import { readErrorResponseMessage, readJsonResponse } from './spexfeed-name-http-utils';
 
 export type SpeXFeedNameRegistrationStatus =
   | 'idle'
@@ -78,6 +78,7 @@ export const SPEXFEED_NAME_REGISTRATION_ADAPTER = new InjectionToken<SpeXFeedNam
 
 const DEFAULT_CONFIRMATION_INTERVAL_MS = 5000;
 const DEFAULT_CONFIRMATION_ATTEMPTS = 24;
+const HELPER_SETUP_GUIDANCE = 'Start the local ROD RPC node on localhost:11999, then create or load the `spexfeed` wallet with `createwallet spexfeed` and `loadwallet spexfeed`.';
 
 /** Builds a canonical sf.profile record for backend-assisted ROD name requests. */
 export function buildSpeXFeedProfileRecord(handle: string, nostrPubkey: string, updatedAt = Math.floor(Date.now() / 1000), input: SpeXFeedProfileRecordInput = {}): SpeXFeedProfileRecordV1 {
@@ -151,7 +152,8 @@ export class SpeXFeedHttpNameRegistrationAdapter implements SpeXFeedNameRegistra
     });
 
     if (!response.ok) {
-      throw new Error(`Registration request failed with HTTP ${response.status}.`);
+      const errorMessage = await readErrorResponseMessage(response, `Registration request failed with HTTP ${response.status}.`);
+      throw new Error(errorMessage);
     }
 
     return await readJsonResponse<SpeXFeedNameRegistrationSubmitResult>(response, 'Registration request');
@@ -161,7 +163,8 @@ export class SpeXFeedHttpNameRegistrationAdapter implements SpeXFeedNameRegistra
     const response = await fetch(`${this.endpoint}/${encodeURIComponent(requestId)}`);
 
     if (!response.ok) {
-      throw new Error(`Confirmation status failed with HTTP ${response.status}.`);
+      const errorMessage = await readErrorResponseMessage(response, `Confirmation status failed with HTTP ${response.status}.`);
+      throw new Error(errorMessage);
     }
 
     return await readJsonResponse<SpeXFeedNameConfirmationResult>(response, 'Confirmation status');
@@ -299,25 +302,52 @@ function mapLookupResultToRegistrationState(input: string, lookupResult: SpeXFee
     };
   }
 
+  const mappedErrors = lookupResult.errors.map((errorMessage) => mapHelperFlowErrorMessage(errorMessage));
+
   return {
     status: lookupResult.status === 'invalid_name' ? 'invalid' : 'failed',
     input,
     handle: lookupResult.handle,
     rodName: lookupResult.rodName,
-    errors: lookupResult.errors,
-    message: lookupResult.errors[0],
+    errors: mappedErrors,
+    message: mappedErrors[0],
   };
 }
 
 function createFailedState(input: string, error: unknown): SpeXFeedNameRegistrationState {
+  const errorMessage = mapHelperFlowErrorMessage(error instanceof Error ? error.message : 'Registration request failed.');
+
   return {
     status: 'failed',
     input,
-    errors: [error instanceof Error ? error.message : 'Registration request failed.'],
+    errors: [errorMessage],
+    message: errorMessage,
   };
+}
+
+function mapHelperFlowErrorMessage(errorMessage: string): string {
+  const normalizedErrorMessage = errorMessage.trim();
+
+  if (!normalizedErrorMessage) {
+    return `Registration request failed. ${HELPER_SETUP_GUIDANCE}`;
+  }
+
+  const lowerCaseErrorMessage = normalizedErrorMessage.toLowerCase();
+  const helperUnavailable =
+    lowerCaseErrorMessage.includes('wallet') ||
+    lowerCaseErrorMessage.includes('rpc') ||
+    lowerCaseErrorMessage.includes('failed to fetch') ||
+    lowerCaseErrorMessage.includes('backend/api configuration error') ||
+    lowerCaseErrorMessage.includes('networkerror') ||
+    lowerCaseErrorMessage.includes('connection refused');
+
+  if (!helperUnavailable || lowerCaseErrorMessage.includes('createwallet spexfeed')) {
+    return normalizedErrorMessage;
+  }
+
+  return `${normalizedErrorMessage} ${HELPER_SETUP_GUIDANCE}`;
 }
 
 function wait(intervalMs: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, intervalMs));
 }
-

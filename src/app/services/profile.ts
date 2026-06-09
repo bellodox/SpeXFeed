@@ -509,6 +509,10 @@ export class ProfileService {
       profile.display_name = document.display_name;
       profile.picture = document.picture;
       profile.banner = document.banner;
+      profile.spexfeed_name = document.spexfeed_name;
+      profile.spexfeedName = document.spexfeedName;
+      profile.sf_name = document.sf_name;
+      profile.spexfeed = document.spexfeed ? { ...document.spexfeed } : undefined;
       profile.created_at = document.created_at;
     }
 

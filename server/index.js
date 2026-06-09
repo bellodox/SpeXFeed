@@ -170,6 +170,22 @@ app.post('/api/rod/spexfeed-name/requests', async (request, response) => {
       return;
     }
 
+    if (isWalletNotLoadedError(error)) {
+      response.status(503).json({
+        error: 'wallet_unavailable',
+        message: 'ROD RPC wallet `spexfeed` is not loaded. Start the local node on localhost:11999, then run `createwallet spexfeed` once and `loadwallet spexfeed` before retrying.',
+      });
+      return;
+    }
+
+    if (isRpcUnavailableError(error)) {
+      response.status(503).json({
+        error: 'rpc_unavailable',
+        message: 'ROD RPC is unavailable. Start the local node on localhost:11999, then create or load the `spexfeed` wallet before retrying.',
+      });
+      return;
+    }
+
     response.status(500).json({
       error: 'rpc_error',
       message: toPublicErrorMessage(error, 'Failed to submit name request.'),
@@ -502,6 +518,24 @@ function isNameAlreadyExistsError(error) {
 
   const message = error.message.toLowerCase();
   return message.includes('name exists already') || message.includes('already exists');
+}
+
+function isWalletNotLoadedError(error) {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  const message = error.message.toLowerCase();
+  return message.includes('wallet') && (message.includes('not found') || message.includes('not loaded') || message.includes('does not exist'));
+}
+
+function isRpcUnavailableError(error) {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  const message = error.message.toLowerCase();
+  return message.includes('connect') || message.includes('econnrefused') || message.includes('timeout') || message.includes('rpc server');
 }
 
 function toPublicErrorMessage(error, fallbackMessage) {
