@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## 2026-06-09 - SpeXFeed 1.1.0-alpha.1
+
 ### Added
 
 - ROD blockchain relay seed registry for relay partition recovery
@@ -15,6 +17,11 @@ All notable changes to this project will be documented in this file.
   - Configuration: `.env` support for ROD RPC credentials, wallet name, wallet passphrase, and helper server port
   - Configuration: [`server/.env.example`](server/.env.example) added for helper environment setup
   - Operations: initial `sf/relays-global` seed registry `name_register` submitted and pending mining with txid `19a06cf460dfaf35f3e22efc69e17755f7adb23ede03ea9da5473163d870c17d`
+
+### Release notes
+
+- This alpha.1 shipment folds the relay seed registry MVP into the previously documented initial alpha scope.
+- The first on-chain global relay seed record is submitted but still pending mining, so shipped documentation should treat activation as partially complete rather than fully verified in production conditions.
 
 ## 2026-06-09 - Initial SpeXFeed alpha shipment
 

@@ -6,6 +6,10 @@ SpeXFeed MVP 1.1 alpha ships the first end-to-end SpeXFeed Name experience aroun
 
 The MVP plan defines this feature as a narrow bridge between ROD name records and Nostr profiles, and explicitly says this is **not SpeXID yet**.
 
+## Shipped release marker
+
+This wiki page now describes the shipped [`SpeXFeed 1.1.0-alpha.1`](../../CHANGELOG.md) release recorded in [`CHANGELOG.md`](../../CHANGELOG.md). Version metadata was aligned in [`package.json`](../../package.json:4), [`package-lock.json`](../../package-lock.json), and [`src-tauri/tauri.conf.json`](../../src-tauri/tauri.conf.json).
+
 ## What MVP 1.1 includes
 
 Implemented Sprint 1 through Sprint 5 functionality, documented here for Sprint 6:
@@ -95,6 +99,7 @@ Implementation references:
 - **Profile metadata continuity**: create-account registration now persists the chosen SpeXFeed name into local draft/profile metadata fields so the account retains the selected handle context after onboarding.
 - **Authenticated Settings stability**: the authenticated alpha now includes the registered `/update-name` route and repaired Settings slide-toggle wiring, removing two blockers from guided tester flows.
 - **Storage migration**: legacy local storage/indexed data is migrated into SpeXFeed namespaces so the alpha can ship under the new branding without discarding prior local user state.
+- **Relay seed registry MVP**: the alpha now also includes helper-backed global relay seed lookup, below-threshold relay bootstrap augmentation in [`RelayService.initialize()`](../../src/app/services/relay.ts:925), and a manual import path in [`src/app/pages/relays/relays.html`](../../src/app/pages/relays/relays.html) for relay partition recovery.
 
 ## Privacy warning
 
@@ -121,6 +126,8 @@ The current validated local helper also depends on wallet-scoped RPC access for 
 
 The recent-profile discovery endpoint is also helper-backed and currently uses `name_scan` with recent-first sorting and short in-memory caching. This is alpha infrastructure, not a claim of finalized production indexing behavior.
 
+The relay seed registry portion of the release should still be documented as **partially activated**: the first `sf/relays-global` registration has been submitted, but final end-to-end activation remains pending mining and post-mining verification through the helper endpoint documented in [`concept-relay-seed-registry.md`](concept-relay-seed-registry.md).
+
 ## Related documentation
 
 - [ROD Name and Nostr Profile Binding](ROD-NAME-PROFILE-BINDING.md)
@@ -140,4 +147,4 @@ There is currently no dedicated documentation validation script in [`package.jso
 
 ## Release posture
 
-Sprint 6 should be treated as **initial alpha release documentation** for a controlled helper-service-based name binding feature and its required surrounding product surfaces. It is suitable for guided tester evaluation of the public handle model, profile discovery/navigation, SpaceXpanse-branded onboarding, verification semantics, and privacy tradeoffs, but not for claiming production-grade identity, wallet custody, or finalized backend infrastructure.
+Sprint 6 should be treated as **initial alpha release documentation** for the shipped [`SpeXFeed 1.1.0-alpha.1`](../../CHANGELOG.md) build: a controlled helper-service-based name binding feature and its required surrounding product surfaces, now including the relay seed registry MVP. It is suitable for guided tester evaluation of the public handle model, profile discovery/navigation, SpaceXpanse-branded onboarding, verification semantics, relay recovery bootstrap behavior, and privacy tradeoffs, but not for claiming production-grade identity, wallet custody, or finalized backend infrastructure.

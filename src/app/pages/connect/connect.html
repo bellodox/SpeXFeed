@@ -228,15 +228,17 @@
 
     <mat-card class="card latest-changes-card">
       <mat-card-content>
-        <p class="latest-changes-eyebrow">Latest changes</p>
-        <h1>ROD relay seed registry is now in progress</h1>
+        <p class="latest-changes-eyebrow">Latest changes · SpeXFeed 1.1.0-alpha.1</p>
+        <h1>Relay seed recovery shipped for alpha testing</h1>
         <p>
-          SpeXFeed now includes blockchain-backed relay seed lookup for relay partition recovery, with a helper API,
-          frontend lookup service, relay bootstrap merge, and a manual "Import Blockchain Seeds" action on the Relays page.
+          SpeXFeed now includes the ROD blockchain relay seed registry MVP for relay partition recovery: a helper endpoint,
+          <code>sf.relays.v1</code> validation, frontend seed lookup, bootstrap relay merging, and a manual "Import
+          Blockchain Seeds" action on the Relays page.
         </p>
         <p>
-          Helper configuration now supports ROD RPC credentials, wallet settings, server port setup, and the initial
-          <strong>sf/relays-global</strong> seed registry registration has been submitted for mining.
+          The release also adds helper <code>.env</code> setup for ROD RPC credentials, wallet name, wallet passphrase, and
+          helper server port. The first <strong>sf/relays-global</strong> registry record has been submitted and remains
+          pending mining before full production-style verification.
         </p>
         <a class="latest-changes-link" href="https://github.com/SpaceXpanse/SpeXFeed/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">
           Read the full changelog
