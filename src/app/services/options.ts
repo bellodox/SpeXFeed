@@ -37,7 +37,7 @@ export class OptionsService {
     this.load();
   }
 
-  values: Options = { mediaService: UploadService.defaultService, language: 'en', dir: 'ltr', enableReactions: true, enableZapping: true, showLines: true, peopleDisplayType: 1, peopleDisplayView: 0, peopleDisplaySort: 'name-asc' };
+  values: Options = { mediaService: UploadService.defaultService, language: 'en', dir: 'ltr', enableReactions: true, enableZapping: false, showLines: true, peopleDisplayType: 1, peopleDisplayView: 0, peopleDisplaySort: 'name-asc' };
 
   load() {
     let options = migratedGetItem('blockcore:notes:nostr:options');
@@ -50,7 +50,7 @@ export class OptionsService {
     }
 
     if (this.values.enableZapping == null) {
-      this.values.enableZapping = true;
+      this.values.enableZapping = false;
     }
 
     if (this.values.peopleDisplayType == null) {
