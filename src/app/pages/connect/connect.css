@@ -169,6 +169,57 @@
   color: var(--mat-sys-on-surface);
 }
 
+.start-page-intro {
+  font-size: 1.08rem;
+  line-height: 1.7;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 720px;
+}
+
+.start-page-guide {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 2rem 0;
+}
+
+.start-page-guide section {
+  background: color-mix(in srgb, var(--mat-sys-primary) 8%, var(--sf-surface-elevated));
+  border: 1px solid color-mix(in srgb, var(--mat-sys-primary) 26%, var(--sf-border-subtle));
+  border-radius: 18px;
+  padding: 1.2rem;
+}
+
+.start-page-guide mat-icon {
+  color: var(--mat-sys-primary);
+  margin-bottom: 0.7rem;
+}
+
+.start-page-guide h2 {
+  color: var(--mat-sys-on-surface);
+  font-size: 1.05rem;
+  margin: 0 0 0.6rem;
+}
+
+.start-page-guide p {
+  color: var(--mat-sys-on-surface);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.start-page-warning {
+  background: color-mix(in srgb, var(--mat-sys-tertiary) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-tertiary) 40%, var(--sf-border-subtle));
+  border-radius: 14px;
+  line-height: 1.55;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 720px;
+  padding: 1rem 1.2rem;
+}
+
 .consent-card {
   margin-bottom: 2em;
 }
@@ -269,6 +320,10 @@
     margin-left: 2em;
     margin-right: 2em;
     padding: 2em;
+  }
+
+  .start-page-guide {
+    grid-template-columns: 1fr;
   }
 
   .spaces {

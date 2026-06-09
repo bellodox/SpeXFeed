@@ -29,7 +29,43 @@
     <mat-card class="card first-card">
       <mat-card-content>
 
-        <h1 class="centered">New ways to connect with humanity</h1>
+        <h1 class="centered">Try SpeXFeed in your browser. Use the desktop app for real activity.</h1>
+        <p class="start-page-intro centered">
+          SpeXFeed connects your Nostr identity with SpaceXpanse ROD profile names. The web version is a public demo for
+          testing the interface and account flow; install the desktop version when you want to use SpeXFeed as your app.
+        </p>
+
+        <div class="start-page-guide" aria-label="How SpeXFeed works">
+          <section>
+            <mat-icon aria-hidden="true">badge</mat-icon>
+            <h2>1. Create or connect an identity</h2>
+            <p>
+              Start with a Nostr profile. You can create a test profile here, log in with an existing key, or use a
+              browser signer for safer key handling.
+            </p>
+          </section>
+          <section>
+            <mat-icon aria-hidden="true">travel_explore</mat-icon>
+            <h2>2. Explore open social data</h2>
+            <p>
+              SpeXFeed reads public Nostr notes, profiles, relays, articles, badges, and SpaceXpanse profile names from
+              decentralized networks instead of one central server.
+            </p>
+          </section>
+          <section>
+            <mat-icon aria-hidden="true">desktop_windows</mat-icon>
+            <h2>3. Install desktop for daily use</h2>
+            <p>
+              The desktop app is the intended version for regular use. It keeps the experience local-first and avoids
+              depending on this web demo for your main SpeXFeed account.
+            </p>
+          </section>
+        </div>
+
+        <p class="start-page-warning centered">
+          <strong>Important:</strong> do not treat the web demo as your permanent account setup. Download the desktop
+          version before using SpeXFeed seriously.
+        </p>
         <p class="centered" *ngIf="consent">
           <button class="start-button" color="accent" routerLink="/connect/create" mat-flat-button>Create new
             profile</button><br /><br />
@@ -86,7 +122,7 @@
         
         <div class="store-text">
           <h3>SpeXFeed for Desktop</h3>
-          <p>Install the native app for a better experience</p>
+          <p>Use the desktop app for real SpeXFeed activity. The web build is only a demo for testing.</p>
         </div>
         <a
           href="https://github.com/SpaceXpanse/SpeXFeed/releases"
